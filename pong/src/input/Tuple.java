@@ -1,13 +1,19 @@
 package input;
 
 public class Tuple { 
-	  public final ActorState x; 
-	  public final Action y; 
+	public final ActorState x; 
+	public final Action y; 
 	  
-	  public Tuple(ActorState x, Action y) { 
-		  this.x = x; 
-		  this.y = y; 
-	  }
+	public Tuple(ActorState x, Action y) { 
+		this.x = x; 
+		this.y = y; 
+	}
+	  
+	public Tuple(String s) {
+		  String[] tupleAttr = s.split("/");
+		  x = new ActorState(tupleAttr[0]);
+		  y = new Action(tupleAttr[1]);
+	}
 
 	@Override
 	public int hashCode() {
@@ -17,7 +23,7 @@ public class Tuple {
 		result = prime * result + ((y == null) ? 0 : y.hashCode());
 		return result;
 	}
-
+		
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -39,5 +45,11 @@ public class Tuple {
 			return false;
 		return true;
 	} 
-	  
+	
+	
+	public String toString(){
+		return x.toString() + "/" + y.toString();
+	}
+	
+	
 } 

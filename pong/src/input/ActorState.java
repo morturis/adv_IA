@@ -24,6 +24,16 @@ public class ActorState {
 		this.ballGridX = pastState.ballGridX;
 		this.ballGridY = pastState.ballGridY;
 	}
+	
+	public ActorState(String s){
+		String[] actorStatesAttr = s.split(" ");
+		selfGridX = Integer.parseInt(actorStatesAttr[0]);
+		enemyGridX = Integer.parseInt(actorStatesAttr[1]);
+		ballGridX = Integer.parseInt(actorStatesAttr[2]);
+		ballGridY = Integer.parseInt(actorStatesAttr[3]);
+	}
+	
+	
 	public ActorState getFollowing(Action a) {
 		ActorState result = new ActorState(this);
 		result.selfGridX += a.action;
@@ -60,6 +70,10 @@ public class ActorState {
 		if (selfGridX != other.selfGridX)
 			return false;
 		return true;
+	}
+	
+	public String toString() {
+		return selfGridX + " " + enemyGridX + " " + ballGridX + " " + ballGridY;
 	}
 	
 }

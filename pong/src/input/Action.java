@@ -10,6 +10,10 @@ public class Action {
 	public Action(int a) {
 		this.action = a;
 	}
+	
+	public Action(String s) {
+		action = Integer.parseInt(s);
+	}
 
 	@Override
 	public int hashCode() {
@@ -31,6 +35,10 @@ public class Action {
 		if (action != other.action)
 			return false;
 		return true;
+	}
+	
+	public String toString() {
+		return "" + action;
 	}
 	
 }

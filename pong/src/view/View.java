@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Color;
 
+import acm.graphics.GLabel;
 import acm.graphics.GOval;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
@@ -11,7 +12,7 @@ import input.*;
 @SuppressWarnings("serial")
 public class View extends GraphicsProgram{
 	//Refresh rate of the screen
-	final static int FPS = 250;
+	final static int FPS = 100;
 	
 	Board board;
 	GRect field;	
@@ -25,7 +26,10 @@ public class View extends GraphicsProgram{
 	GRect p2;
 	AIPlayer player2;
 	
-	public void init() {
+	GLabel scoreP1;
+	GLabel scoreP2;
+	
+	public synchronized void init() {
 		setSize(Board.BOARD_HEIGHT+50, Board.BOARD_WIDTH+50);
 		board = new Board();
 		board.init();
@@ -59,10 +63,13 @@ public class View extends GraphicsProgram{
 		field = new GRect(Board.BOARD_HEIGHT, Board.BOARD_WIDTH);
 		field.setFillColor(Color.BLACK);
 		field.setFilled(true);
+		
+		scoreP1 = new GLabel (""+board.getScore(0), Board.BOARD_WIDTH+10, 10);
+		scoreP2 = new GLabel (""+board.getScore(1), Board.BOARD_WIDTH+10, Board.BOARD_HEIGHT);
 				
 		add(field);
 		add(p1); add(p2); add(ball);
-		requestFocus();		
+		add(scoreP1); add(scoreP2);
 	}
 	
 	public void run(){
@@ -82,6 +89,8 @@ public class View extends GraphicsProgram{
 		p1.setLocation(playersPos[0], Board.BOTTOM_PLAYER_YOFFSET);
 		p2.setLocation(playersPos[1], Board.TOP_PLAYER_YOFFSET);
 		ball.setLocation(ballPos[0], ballPos[1]);
+		scoreP1.setLabel(board.getScore(0)+"");
+		scoreP2.setLabel(board.getScore(1)+"");
 	}	
 	
 }
