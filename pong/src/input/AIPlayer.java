@@ -1,18 +1,17 @@
 package input;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import game.Board;
 
 public class AIPlayer extends Player implements Runnable {	
 	
 	static final double DISCOUNT_FACTOR = 0.9;
-	static final double LEARNING_RATE = 0.1;
+	static final double LEARNING_RATE = 0.2;
 	static final int NUMBER_OF_GRID = Board.BOARD_WIDTH/Board.PLAYER_SPEED;
 	static final int NUMBER_OF_ACTIONS = 3;	//Left, stay, right
 		
-	Map <Tuple, Double> map;
+	HashMap<Tuple, Double> map;
 	int storedReward = 0;
 
 	public AIPlayer(int id, Board board) {
@@ -20,16 +19,21 @@ public class AIPlayer extends Player implements Runnable {
 		map = new HashMap<Tuple, Double>();
 	}
 
+	public void setMap(HashMap<Tuple, Double> loadedMap) {
+		this.map = loadedMap;
+	}
+	
 	@Override
 	public synchronized void run() {
 		while(true) {
 			takeAction();
 			try {
-				wait(1);
+				wait(5);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			if(board.terminatePlayers) return;
 		}
 	}
 	
@@ -78,6 +82,10 @@ public class AIPlayer extends Player implements Runnable {
 			return new Action(Action.RIGHT);
 		}
 		return new Action(Action.STAY);
+	}
+
+	public HashMap<Tuple, Double> getMap() {
+		return map;
 	}
 
 }

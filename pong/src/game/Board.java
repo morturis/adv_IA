@@ -10,7 +10,7 @@ public class Board {
 	public final static int BOARD_WIDTH = 600;
 	public final static int PLAYER_LENGTH = 60;
 	public final static int PLAYER_HEIGHT = 20;
-	public final static int PLAYER_SPEED = 20;
+	public final static int PLAYER_SPEED = 60;
 	public final static int BALL_SIZE = 6;
 	public final static int BALL_SPEED = 10;
 	public final static int TOP_PLAYER_YOFFSET = 0;
@@ -34,6 +34,7 @@ public class Board {
 	
 	AIPlayer p0;	//top
 	AIPlayer p1;	//bot
+	public boolean terminatePlayers = false;
 	
 	/*
 	 * Initializes or resets the board 
@@ -153,7 +154,7 @@ public class Board {
 	 * dir is +1 for rightmove or -1 for leftmove
 	 * also allows dir = 0 to remain still
 	 */
-	public void movePlayer(int id, int dir) {
+	public synchronized void movePlayer(int id, int dir) {
 		if(id == 0) {
 			bottom_player_x = bottom_player_x+PLAYER_SPEED*dir;
 			if(bottom_player_x <0) bottom_player_x = 0;

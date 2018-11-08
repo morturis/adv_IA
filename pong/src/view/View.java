@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import acm.graphics.GLabel;
 import acm.graphics.GOval;
@@ -8,11 +10,13 @@ import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
 import game.Board;
 import input.*;
+import persistence.Persistence;
 
 @SuppressWarnings("serial")
 public class View extends GraphicsProgram{
 	//Refresh rate of the screen
 	final static int FPS = 100;
+	
 	
 	Board board;
 	GRect field;	
@@ -29,7 +33,12 @@ public class View extends GraphicsProgram{
 	GLabel scoreP1;
 	GLabel scoreP2;
 	
+	Persistence persist;
+	
 	public synchronized void init() {
+		persist = new Persistence("output.txt");
+		addKeyListeners();
+		
 		setSize(Board.BOARD_HEIGHT+50, Board.BOARD_WIDTH+50);
 		board = new Board();
 		board.init();
@@ -46,6 +55,15 @@ public class View extends GraphicsProgram{
 		
 		player1 = new AIPlayer(0, board);
 		player2 = new AIPlayer(1, board);
+		
+		
+		try {
+			persist.loadFromFile(player1, player2);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		board.setPlayers(player1, player2);
 		ai1 = new Thread(player1);
@@ -77,7 +95,7 @@ public class View extends GraphicsProgram{
 			pause(1000/FPS);
 			displayBoard();	
 			board.moveBall();
-			board.checkCollisions();	
+			board.checkCollisions();
 		}
 	}
 	/*
@@ -92,5 +110,30 @@ public class View extends GraphicsProgram{
 		scoreP1.setLabel(board.getScore(0)+"");
 		scoreP2.setLabel(board.getScore(1)+"");
 	}	
+	
+	public synchronized void keyPressed(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_UP) {
+			System.out.println("Saving player progress");
+			board.terminatePlayers = true;
+			try {
+				ai1.join();
+				System.out.println("P1 finished");
+				ai2.join();
+				System.out.println("P2 finished");
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			
+			try {
+				persist.saveToFile(player1.getMap(), player2.getMap());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+
+			System.out.println("done");
+			
+
+		}
+	}
 	
 }
