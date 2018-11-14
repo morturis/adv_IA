@@ -113,7 +113,8 @@ public class Board {
 			contactPoint = (bottom_player_x+PLAYER_LENGTH/2)-(ballX+BALL_SIZE/2);	
 		}
 		contactPoint = contactPoint/PLAYER_LENGTH/2;
-		move_right_speed = contactPoint*BALL_SPEED*2+ThreadLocalRandom.current().nextInt(-1, 2);
+		//move_right_speed = contactPoint*BALL_SPEED*2+ThreadLocalRandom.current().nextInt(-1, 3);
+		move_right_speed = contactPoint*BALL_SPEED*2.5;
 		move_right_speed*=-1;
 		System.out.println(contactPoint + " " + move_right_speed + " " + move_up_speed);
 	}
