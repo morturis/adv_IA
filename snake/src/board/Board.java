@@ -10,10 +10,10 @@ public class Board {
 
 	public final static int BOARD_WIDTH = 16;
 	public final static int BOARD_HEIGHT = 12;
-	private final static int MOVE_LEFT = 1;
-	private final static int MOVE_RIGHT = 2;
-	private final static int MOVE_UP = 3;
-	private final static int MOVE_DOWN = 4;
+	public final static int MOVE_LEFT = 1;
+	public final static int MOVE_RIGHT = 2;
+	public final static int MOVE_UP = 3;
+	public final static int MOVE_DOWN = 4;
 	private final static int REWARD_MOVE = 1;
 	private final static int REWARD_FOOD = 100;
 	private final static int REWARD_COLLIDE = -10;
@@ -24,6 +24,7 @@ public class Board {
 	private final int id;
 	private final Snake snake;
 	private final Player player;
+	private Cell food;
 	
 	private volatile int snakeDir;
 	private int forbiddenDir;
@@ -119,7 +120,8 @@ public class Board {
 	
 	private void genFood() {
 		int randomNum = ThreadLocalRandom.current().nextInt(0, EmptyCellList.size());
-		EmptyCellList.remove(randomNum).setState(Cell.FOOD);
+		food = EmptyCellList.remove(randomNum);
+		food.setState(Cell.FOOD);
 	}
 
 	@Override
@@ -179,5 +181,12 @@ public class Board {
 		}
 		
 	}
-
+	
+	public Snake getSnake() {
+		return snake;
+	}
+	
+	public Cell getFood() {
+		return food;
+	}
 }

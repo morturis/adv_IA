@@ -3,7 +3,7 @@ package input;
 import board.Board;
 
 public class DQNPlayer extends Player{
-
+	
 	public DQNPlayer(Board board) {
 		super(board);
 		// TODO Auto-generated constructor stub

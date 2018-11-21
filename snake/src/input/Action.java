@@ -1,10 +1,14 @@
 package input;
 
 public class Action {
+	int action;
 
+	public Action(int x) {
+		action = x;
+	}
+	
 	public int getAction() {
-		// TODO Auto-generated method stub
-		return 0;
+		return action;
 	}
 
 }

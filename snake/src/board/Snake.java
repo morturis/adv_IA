@@ -47,5 +47,8 @@ public class Snake {
 		
 	}
 	
+	public Cell getHead() {
+		return snakeCells.getFirst();
+	}
 	
 }
