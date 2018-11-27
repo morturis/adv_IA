@@ -47,5 +47,4 @@ public abstract class Player implements Runnable {
 			return false;
 		return true;
 	}
-	
 }

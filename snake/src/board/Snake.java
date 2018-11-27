@@ -14,7 +14,7 @@ public class Snake {
 	}
 	
 	public int[] getPos() {
-		return snakeCells.getFirst().getCell();
+		return snakeCells.getFirst().getCellCoord();
 	}
 	
 	

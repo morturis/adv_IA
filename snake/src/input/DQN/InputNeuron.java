@@ -8,10 +8,13 @@ public class InputNeuron extends Neuron{
 	Cell input;
 	public ArrayList<Synapse> outputList;
 	
-	InputNeuron(Cell c){
+	InputNeuron(){
 		super();
-		input = c;
 		outputList = new ArrayList<Synapse>();
+	}
+	
+	public void setInput(Cell input) {
+		this.input = input;
 	}
 	
 	@Override

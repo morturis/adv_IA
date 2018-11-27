@@ -3,11 +3,13 @@ package input.DQN;
 import java.util.ArrayList;
 
 import board.Board;
+import input.Action;
+import input.State;
 
 public class Network{
 	public static final double LEARNING_RATE = 0.1;
 	public static final double DISCOUNT_FACTOR = 0.9;
-	private static int SIZE_OF_INPUT = Board.BOARD_HEIGHT * Board.BOARD_WIDTH;
+	private static int SIZE_OF_INPUT = (State.LOOK_AHEAD*2+1)^2+1;
 	private static int SIZE_OF_HIDDEN = SIZE_OF_INPUT/2;
 	
 	public ArrayList<Neuron[]> network;
@@ -18,8 +20,7 @@ public class Network{
 		//Init input neurons
 		Neuron[] temp = new Neuron[SIZE_OF_INPUT];
 		for(int i = 0; i<temp.length;i++) {
-			//TODO create input list
-			//temp[i] = new InputNeuron();
+			temp[i] = new InputNeuron();
 		}
 		network.add(temp);
 		
@@ -45,6 +46,7 @@ public class Network{
 				b.inputList.add(s);
 			}
 		}
+		
 		//Creating synapses from hidden layer to outputlayer
 		OutputNeuron c = (OutputNeuron)network.get(2)[0];
 		for(int i = 0; i<network.get(1).length; i++) {
@@ -53,11 +55,26 @@ public class Network{
 			b.outputList.add(s);
 			c.inputList.add(s);
 		}
-		
-		
-		
 	}
 	
-	
-	
+	public Action makeDecision(State state) {
+		
+		// Link input neurons with their cells and have them work
+		for(int i=0; i<SIZE_OF_INPUT; i++) {
+			InputNeuron temp = (InputNeuron) network.get(0)[i];
+			temp.setInput(state.stateList.get(i));
+			temp.calcOutput();
+		}
+		
+		// Have hidden neurons work
+		for(int i=0; i<SIZE_OF_HIDDEN; i++) {
+			network.get(1)[i].calcOutput();	
+		}
+		
+		network.get(2)[0].calcOutput();
+		
+		// TODO
+		// Might have to mess with this again
+		return new Action(Math.round((float) network.get(2)[0].getResult()));
+	}
 }

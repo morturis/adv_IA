@@ -182,11 +182,19 @@ public class Board {
 		
 	}
 	
+	public Cell getCell(int x, int y) {
+		if(x>=0 && x<BOARD_WIDTH && y>=0 && y<BOARD_HEIGHT) {
+			return ArrayCells[x][y];
+		}else {
+			return null;
+		}
+	}
+	
 	public Snake getSnake() {
 		return snake;
 	}
 	
-	public Cell getFood() {
+	public Cell getFoodCell() {
 		return food;
 	}
 }

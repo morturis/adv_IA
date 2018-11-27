@@ -24,7 +24,7 @@ public class Cell {
 		this.state = state;
 	}
 	
-	public int[] getCell() {
+	public int[] getCellCoord() {
 		return cellCoord;
 	}
 	
