@@ -16,7 +16,7 @@ public class Cell {
 		cellCoord[1] = j;
 	}
 	
-	public int getState(){
+	public int getContent(){
 		return state;
 	}
 	

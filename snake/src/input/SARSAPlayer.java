@@ -11,13 +11,13 @@ public class SARSAPlayer extends Player{
 	}
 
 	@Override
-	Action chooseAction() {
+	void chooseAction() {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	@Override
-	public void reward(int reward) {
+	void update() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -27,6 +27,7 @@ public class SARSAPlayer extends Player{
 		// TODO Auto-generated method stub
 		
 	}
+
 	
 }
 	

@@ -19,12 +19,23 @@ public class InputNeuron extends Neuron{
 	
 	@Override
 	void calcOutput() {
-		result = (double)(input.getState());
+		result = (double)(input.getContent());
+		//result+= input.getCellCoord()[1]*100;
+		//result+= input.getCellCoord()[0];
+		System.out.println("i "+result);
 	}
 
 	@Override
+	//This method is never called
 	void updateWeights() {
-		// TODO Auto-generated method stub
+		throw new RuntimeException("Input neuron called updateweights");
+		
+	}
+
+	@Override
+	//This method is never called 
+	protected void calcGradient(double expectedValue) {
+		throw new RuntimeException("Input neuron called calcGradient");
 		
 	}
 	

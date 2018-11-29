@@ -2,10 +2,11 @@ package input;
 
 import board.Board;
 
-public abstract class Player implements Runnable {
+public abstract class Player{
 	private volatile static int nextId;
 	final int id;
 	final Board board;
+	int reward;
 	
 	public Player(Board board) {
 		this.id = nextId;
@@ -13,18 +14,23 @@ public abstract class Player implements Runnable {
 		this.board = board;
 	}
 	
-	abstract Action chooseAction();
-	abstract public void reward(int reward);
-	
-	void takeAction(Action a) {
-		board.moveSnake(a.getAction());
-	}	
-	
-	public synchronized void run() {
-		takeAction(chooseAction());
+	abstract void chooseAction();	
+	abstract void update();
+	abstract void saveToFile();
+	public void reward(int x) {
+		reward = x;
 	}
 	
-	abstract void saveToFile();
+	public int getReward() {
+		int r = reward;
+		reward = 0;
+		return r;
+	}
+	
+	public void run() {
+		chooseAction();
+		reward = 0;
+	}
 
 	@Override
 	public int hashCode() {

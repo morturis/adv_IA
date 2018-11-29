@@ -17,7 +17,14 @@ public class State {
 		
 		for(int i=-LOOK_AHEAD; i <= LOOK_AHEAD; i++) {
 			for(int j=-LOOK_AHEAD; j <= LOOK_AHEAD; j++) {
-				stateList.add(b.getCell(snakeHeadCoord[0]+i, snakeHeadCoord[1]+j));
+				if(b.getCell(snakeHeadCoord[0]+i, snakeHeadCoord[1]+j) == null) {
+					Cell border = new Cell(snakeHeadCoord[0]+i, snakeHeadCoord[1]+j);
+					border.setState(Cell.SNAKE);
+					stateList.add(border);
+				}else {
+					//If cell is inside the board
+					stateList.add(b.getCell(snakeHeadCoord[0]+i, snakeHeadCoord[1]+j));
+				}
 			}
 		}
 		

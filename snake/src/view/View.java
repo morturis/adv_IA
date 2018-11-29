@@ -6,12 +6,14 @@ import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
 import board.Board;
 import board.Cell;
+import input.DQNPlayer;
+import input.Player;
 
 @SuppressWarnings("serial")
 public class View extends GraphicsProgram{
 	private final static int CELL_SIZE = 30;
 	
-	
+	private Player p1;
 	private Board board;
 	Cell[][]ArrayCells;	
 	GRect[][] viewCells;
@@ -34,14 +36,14 @@ public class View extends GraphicsProgram{
 			columnOffset = 0;
 			rowOffset += CELL_SIZE;
 		}
-		displayBoard();
+		p1 = new DQNPlayer(board);
 	}
 	
 	private void displayBoard() {
 		ArrayCells = board.getArrayCells();
 		for(int i = 0; i < Board.BOARD_WIDTH;i++) {
 			for(int j = 0; j< Board.BOARD_HEIGHT;j++) {
-				switch(ArrayCells[i][j].getState()) {
+				switch(ArrayCells[i][j].getContent()) {
 					case Cell.SNAKE_HEAD:
 						viewCells[i][j].setFillColor(Color.BLUE);
 						break;
@@ -63,6 +65,7 @@ public class View extends GraphicsProgram{
 		while(true) {
 			board.pulse();
 			displayBoard();
+			p1.run();
 			try {
 				wait(500);
 			} catch (InterruptedException e) {

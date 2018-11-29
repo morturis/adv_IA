@@ -1,6 +1,8 @@
 package input.DQN;
 
 public abstract class Neuron {
+	public static final double LEARNING_RATE = 0.1;
+	public static final double DISCOUNT_FACTOR = 0.9;
 	protected double result;
 	protected double gradient;
 	
@@ -19,4 +21,6 @@ public abstract class Neuron {
 	}
 	
 	abstract void updateWeights();
+
+	protected abstract void calcGradient(double expectedValue);
 }

@@ -73,7 +73,7 @@ public class AIPlayer extends Player implements Runnable {
 		map.putIfAbsent(moveRight, 0.0);
 		
 		/*
-		 * this is the policy Greedy
+		 * this is the policy €-Greedy
 		 */
 		if(map.get(moveLeft) > map.get(stay) && map.get(moveLeft) > map.get(moveRight)) {
 			return new Action(Action.LEFT);

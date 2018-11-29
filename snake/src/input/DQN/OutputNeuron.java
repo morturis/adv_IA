@@ -19,13 +19,22 @@ public class OutputNeuron extends Neuron {
 			sum += s.start.getResult() * s.weight;
 		}
 		result = sum;
-
+		System.out.println("o "+result);
 	}
 
 	@Override
 	void updateWeights() {
-		// TODO Auto-generated method stub
-		
+		for(Synapse s : inputList) {
+			double deltaOldWeight = s.deltaWeight;
+			double deltaNewWeight = LEARNING_RATE*s.start.getResult() * gradient+DISCOUNT_FACTOR * deltaOldWeight;
+			s.deltaWeight = deltaNewWeight;
+			s.weight += deltaNewWeight;
+		}		
+	}
+
+	@Override
+	protected void calcGradient(double expectedValue) {
+		gradient = (expectedValue - result)*outputDerivative();		
 	}
 
 }

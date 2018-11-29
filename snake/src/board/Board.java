@@ -3,6 +3,7 @@ package board;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+import input.Action;
 import input.Player;
 import input.SARSAPlayer;
 
@@ -49,7 +50,8 @@ public class Board {
 		return ArrayCells;
 	}
 	
-	public void moveSnake(int x) {
+	public void moveSnake(Action a) {
+		int x = a.getAction();
 		if (x != forbiddenDir) {
 			snakeDir = x;
 			switch(x) {
@@ -103,15 +105,15 @@ public class Board {
 				break;
 		}
 		
-		if(nextCell.getState() == Cell.SNAKE) {
+		if(nextCell.getContent() == Cell.SNAKE) {
 			collide();
 
-		}else if(nextCell.getState() == Cell.FOOD) {
+		}else if(nextCell.getContent() == Cell.FOOD) {
 			giveReward(REWARD_FOOD);
 			snake.advance(true, nextCell, EmptyCellList);
 			genFood();
 
-		}else if(nextCell.getState() == Cell.VOID) {
+		}else if(nextCell.getContent() == Cell.VOID) {
 			giveReward(REWARD_MOVE);
 			snake.advance(false, nextCell, EmptyCellList);
 		}
@@ -176,7 +178,7 @@ public class Board {
 		EmptyCellList.clear();
 		for(Cell[] a: ArrayCells) {
 			for(Cell e: a) {
-				if(e.getState() == Cell.VOID) EmptyCellList.add(e);
+				if(e.getContent() == Cell.VOID) EmptyCellList.add(e);
 			}
 		}
 		
