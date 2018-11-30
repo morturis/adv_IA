@@ -6,6 +6,7 @@ public class Cell {
 	public static final int SNAKE = 1;
 	public static final int SNAKE_HEAD = 2;
 	public static final int FOOD = 3;
+	public static final int BORDER = 4;
 	
 	private int state;
 	private int [] cellCoord;

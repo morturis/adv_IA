@@ -6,28 +6,43 @@ import board.Board;
 import board.Cell;
 
 public class State {
+	public static final int SIZE = 5;
 	
-	public static final int LOOK_AHEAD = 1; 
-	public ArrayList<Cell> stateList;	// firsts --> adjacent to the head; last --> food cell
+	public int upCellContent;
+	public int downCellContent;
+	public int leftCellContent;
+	public int rightCellContent;
+	public int distance;
 	
 	State(Board b){
-		int[] snakeHeadCoord = b.getSnake().getHead().getCellCoord();
-		
-		stateList = new ArrayList<Cell>((LOOK_AHEAD*2+1)^2+1);
-		
-		for(int i=-LOOK_AHEAD; i <= LOOK_AHEAD; i++) {
-			for(int j=-LOOK_AHEAD; j <= LOOK_AHEAD; j++) {
-				if(b.getCell(snakeHeadCoord[0]+i, snakeHeadCoord[1]+j) == null) {
-					Cell border = new Cell(snakeHeadCoord[0]+i, snakeHeadCoord[1]+j);
-					border.setState(Cell.SNAKE);
-					stateList.add(border);
-				}else {
-					//If cell is inside the board
-					stateList.add(b.getCell(snakeHeadCoord[0]+i, snakeHeadCoord[1]+j));
-				}
-			}
+		int x = b.getSnake().getHead().getCellCoord()[0];
+		int y = b.getSnake().getHead().getCellCoord()[1];
+		//Up
+		if(y-1 <0) {
+			upCellContent = Cell.BORDER;
+		}else {
+			upCellContent = b.getCell(x, y-1).getContent();
 		}
+		//Left
+		if(x-1 <0) {
+			leftCellContent = Cell.BORDER;
+		}else {
+			leftCellContent = b.getCell(x-1, y).getContent();
+		}
+		//Down
+		if(y+1 >Board.BOARD_HEIGHT-1) {
+			upCellContent = Cell.BORDER;
+		}else {
+			upCellContent = b.getCell(x, y+1).getContent();
+		}
+		//Right
+		if(x+1 >Board.BOARD_WIDTH-1) {
+			upCellContent = Cell.BORDER;
+		}else {
+			upCellContent = b.getCell(x+1, y).getContent();
+		}
+		distance = Math.abs(b.getFoodCell().getCellCoord()[0] - x);
+		distance += Math.abs(b.getFoodCell().getCellCoord()[1] - y);
 		
-		stateList.add(b.getFoodCell());
 	}
 }

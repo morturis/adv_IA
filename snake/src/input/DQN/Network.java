@@ -6,10 +6,11 @@ import board.Board;
 import input.Action;
 import input.Player;
 import input.State;
+import input.Tuple;
 
 public class Network{
-	private static int SIZE_OF_INPUT = (int)Math.pow(State.LOOK_AHEAD*2+1, 2)+1;
-	private static int SIZE_OF_HIDDEN = SIZE_OF_INPUT/2;
+	private static int SIZE_OF_INPUT = State.SIZE+1;
+	private static int SIZE_OF_HIDDEN = SIZE_OF_INPUT;
 	
 	public ArrayList<Neuron[]> network;
 	
@@ -56,12 +57,14 @@ public class Network{
 		}		
 	}
 	
-	public void updateWeights(double expectedValue) {
+	public void updateWeights(Tuple t, double expectedValue) {
+		evaluate(t);
 		//Calc gradient for outputneuron
 		network.get(2)[0].calcGradient(expectedValue);
 		
 		//Gradient for hidden layer
 		for(int i = 0; i<network.get(1).length;i++) {
+			//Expected value is not used but needs to be overriden
 			network.get(1)[i].calcGradient(expectedValue);
 		}
 		
@@ -72,11 +75,10 @@ public class Network{
 		}
 	}
 	
-	public double makeDecision(State state) {
+	private void work() {
 		// Link input neurons with their cells and have them work
 		for(int i=0; i<SIZE_OF_INPUT; i++) {
 			InputNeuron temp = (InputNeuron) network.get(0)[i];
-			temp.setInput(state.stateList.get(i));
 			temp.calcOutput();
 		}
 		
@@ -87,11 +89,23 @@ public class Network{
 		}
 		
 		OutputNeuron temp = (OutputNeuron)network.get(2)[0];
-		temp.calcOutput();
+		temp.calcOutput();	
 		
+	}
+	
+	public double evaluate(Tuple t) {
+		//Setting input 
+		State s = t.getState();
+		((InputNeuron) network.get(0)[0]).setInput(s.upCellContent);
+		((InputNeuron) network.get(0)[1]).setInput(s.downCellContent);
+		((InputNeuron) network.get(0)[2]).setInput(s.leftCellContent);
+		((InputNeuron) network.get(0)[3]).setInput(s.rightCellContent);
+		((InputNeuron) network.get(0)[4]).setInput(s.distance);		
 		
-		return temp.getResult();		
+		((InputNeuron) network.get(0)[5]).setInput(t.getAction().getAction());
 		
+		work();
+		return network.get(2)[0].getResult();
 	}
 	
 }

@@ -29,9 +29,9 @@ class HiddenNeuron extends Neuron{
 			sum += s.start.getResult() * s.weight;
 		}
 		//TODO tanh doesnt work, always outputs 1
-		//result = Math.tanh(sum);
-		result = sum;
-		System.out.println("h "+result);
+		result = Math.tanh(sum);
+		//result = sum;
+		//System.out.println("h "+result);
 	}
 	
 	void calcGradient() {
@@ -53,6 +53,7 @@ class HiddenNeuron extends Neuron{
 	}
 
 	@Override
+	//Expected value is not used but needs to be overriden
 	protected void calcGradient(double expectedValue) {
 		double sum = 0;
 		for(Synapse s: outputList) {

@@ -1,8 +1,8 @@
 package input.DQN;
 
 public abstract class Neuron {
-	public static final double LEARNING_RATE = 0.1;
-	public static final double DISCOUNT_FACTOR = 0.9;
+	public static final double LEARNING_RATE = 0.2;
+	public static final double DISCOUNT_FACTOR = 0.8;
 	protected double result;
 	protected double gradient;
 	
@@ -18,6 +18,7 @@ public abstract class Neuron {
 	
 	double outputDerivative() {
 		return (1-result*result);
+		
 	}
 	
 	abstract void updateWeights();

@@ -67,7 +67,7 @@ public class View extends GraphicsProgram{
 			displayBoard();
 			p1.run();
 			try {
-				wait(500);
+				wait(1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

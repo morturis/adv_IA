@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import board.Cell;
 
 public class InputNeuron extends Neuron{
-	Cell input;
+	int input;
 	public ArrayList<Synapse> outputList;
 	
 	InputNeuron(){
@@ -13,16 +13,13 @@ public class InputNeuron extends Neuron{
 		outputList = new ArrayList<Synapse>();
 	}
 	
-	public void setInput(Cell input) {
+	public void setInput(int input) {
 		this.input = input;
 	}
 	
 	@Override
 	void calcOutput() {
-		result = (double)(input.getContent());
-		//result+= input.getCellCoord()[1]*100;
-		//result+= input.getCellCoord()[0];
-		System.out.println("i "+result);
+		result = (double) input;
 	}
 
 	@Override

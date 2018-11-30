@@ -11,9 +11,9 @@ public class SARSAPlayer extends Player{
 	}
 
 	@Override
-	void chooseAction() {
+	Action chooseAction() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
@@ -24,6 +24,12 @@ public class SARSAPlayer extends Player{
 
 	@Override
 	void saveToFile() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	void takeAction(Action a) {
 		// TODO Auto-generated method stub
 		
 	}

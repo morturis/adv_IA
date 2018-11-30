@@ -16,8 +16,8 @@ public class Board {
 	public final static int MOVE_UP = 3;
 	public final static int MOVE_DOWN = 4;
 	private final static int REWARD_MOVE = 1;
-	private final static int REWARD_FOOD = 100;
-	private final static int REWARD_COLLIDE = -10;
+	private final static int REWARD_FOOD = 10;
+	private final static int REWARD_COLLIDE = -1000;
 	private static int nextId = 1;
 	
 	private Cell[][] ArrayCells;
@@ -28,7 +28,7 @@ public class Board {
 	private Cell food;
 	
 	private volatile int snakeDir;
-	private int forbiddenDir;
+	//private int forbiddenDir;
 	
 	public Board() {
 		this.id = nextId;
@@ -51,24 +51,7 @@ public class Board {
 	}
 	
 	public void moveSnake(Action a) {
-		int x = a.getAction();
-		if (x != forbiddenDir) {
-			snakeDir = x;
-			switch(x) {
-				case MOVE_LEFT:
-					forbiddenDir = MOVE_RIGHT;
-					break;
-				case MOVE_RIGHT:
-					forbiddenDir = MOVE_LEFT;
-					break;
-				case MOVE_UP:
-					forbiddenDir = MOVE_DOWN;
-					break;
-				default:
-					forbiddenDir = MOVE_UP;
-					break;
-			}
-		}
+		snakeDir = a.getAction();
 	}
 	
 	public void pulse() {
@@ -122,6 +105,7 @@ public class Board {
 	
 	private void genFood() {
 		int randomNum = ThreadLocalRandom.current().nextInt(0, EmptyCellList.size());
+		//int randomNum = 0;	//No random food
 		food = EmptyCellList.remove(randomNum);
 		food.setState(Cell.FOOD);
 	}
@@ -149,8 +133,9 @@ public class Board {
 	}
 	
 	private void collide() {
-		reset();
 		giveReward(REWARD_COLLIDE);
+		System.out.println("collision");
+		reset();
 	}
 	
 	private void giveReward(int x) {	
@@ -161,7 +146,6 @@ public class Board {
 		initializeCells();
 		snake.resetSnake();	
 		snakeDir = MOVE_RIGHT;
-		forbiddenDir = MOVE_LEFT;	
 		fillEmptyCellList();
 		genFood();
 	}

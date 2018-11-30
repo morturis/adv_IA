@@ -14,24 +14,21 @@ public abstract class Player{
 		this.board = board;
 	}
 	
-	abstract void chooseAction();	
+	abstract Action chooseAction();	
 	abstract void update();
 	abstract void saveToFile();
+	abstract void takeAction(Action a) ;
+	
+	
 	public void reward(int x) {
 		reward = x;
 	}
 	
-	public int getReward() {
-		int r = reward;
-		reward = 0;
-		return r;
-	}
 	
 	public void run() {
-		chooseAction();
-		reward = 0;
+		takeAction(chooseAction());
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -18,8 +18,9 @@ public class OutputNeuron extends Neuron {
 		for(Synapse s: inputList) {
 			sum += s.start.getResult() * s.weight;
 		}
-		result = sum;
-		System.out.println("o "+result);
+		//result = sum;
+		result = Math.tanh(sum);
+		//System.out.println("o "+result);
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class OutputNeuron extends Neuron {
 
 	@Override
 	protected void calcGradient(double expectedValue) {
-		gradient = (expectedValue - result)*outputDerivative();		
+		gradient = Math.pow((expectedValue - result),2)*outputDerivative();	
 	}
 
 }
