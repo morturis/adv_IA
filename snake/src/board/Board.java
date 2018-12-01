@@ -9,26 +9,25 @@ import input.SARSAPlayer;
 
 public class Board {
 
-	public final static int BOARD_WIDTH = 16;
-	public final static int BOARD_HEIGHT = 12;
-	public final static int MOVE_LEFT = 1;
+	public final static int BOARD_WIDTH = 6;
+	public final static int BOARD_HEIGHT = 5;
+	public final static int MOVE_LEFT = -2;
 	public final static int MOVE_RIGHT = 2;
-	public final static int MOVE_UP = 3;
-	public final static int MOVE_DOWN = 4;
-	private final static int REWARD_MOVE = 1;
-	private final static int REWARD_FOOD = 10;
-	private final static int REWARD_COLLIDE = -1000;
+	public final static int MOVE_UP = -1;
+	public final static int MOVE_DOWN = 1;
+	public final static int REWARD_MOVE = -10;
+	public final static int REWARD_FOOD = 500;
+	public final static int REWARD_COLLIDE = -100;
 	private static int nextId = 1;
 	
 	private Cell[][] ArrayCells;
 	private ArrayList<Cell> EmptyCellList;
 	private final int id;
 	private final Snake snake;
-	private final Player player;
+	private Player player;
 	private Cell food;
 	
 	private volatile int snakeDir;
-	//private int forbiddenDir;
 	
 	public Board() {
 		this.id = nextId;
@@ -41,7 +40,7 @@ public class Board {
 		}
 		EmptyCellList = new ArrayList<Cell>();
 		snake = new Snake(this);
-		player = new SARSAPlayer(this);	
+		player = new SARSAPlayer(this);
 		reset();
 	
 	}
@@ -52,6 +51,7 @@ public class Board {
 	
 	public void moveSnake(Action a) {
 		snakeDir = a.getAction();
+		pulse();
 	}
 	
 	public void pulse() {
@@ -87,11 +87,12 @@ public class Board {
 				nextCell = ArrayCells[snakePos[0]][snakePos[1]+1];		
 				break;
 		}
-		
 		if(nextCell.getContent() == Cell.SNAKE) {
+			//System.out.println("COLLIDING WITH SNAKE"); 
 			collide();
 
 		}else if(nextCell.getContent() == Cell.FOOD) {
+			//System.out.println("eaten apple");
 			giveReward(REWARD_FOOD);
 			snake.advance(true, nextCell, EmptyCellList);
 			genFood();
@@ -99,8 +100,7 @@ public class Board {
 		}else if(nextCell.getContent() == Cell.VOID) {
 			giveReward(REWARD_MOVE);
 			snake.advance(false, nextCell, EmptyCellList);
-		}
-		
+		}		
 	}
 	
 	private void genFood() {
@@ -134,7 +134,6 @@ public class Board {
 	
 	private void collide() {
 		giveReward(REWARD_COLLIDE);
-		System.out.println("collision");
 		reset();
 	}
 	
@@ -182,5 +181,14 @@ public class Board {
 	
 	public Cell getFoodCell() {
 		return food;
+	}
+
+	public void setPlayer(Player p1) {
+		this.player=p1;
+		
+	}
+
+	public Player getPlayer() {
+		return player;
 	}
 }

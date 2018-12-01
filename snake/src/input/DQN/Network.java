@@ -9,8 +9,8 @@ import input.State;
 import input.Tuple;
 
 public class Network{
-	private static int SIZE_OF_INPUT = State.SIZE+1;
-	private static int SIZE_OF_HIDDEN = SIZE_OF_INPUT;
+	private static int SIZE_OF_INPUT = State.SIZE+2;
+	private static int SIZE_OF_HIDDEN = SIZE_OF_INPUT*2;
 	
 	public ArrayList<Neuron[]> network;
 	
@@ -58,7 +58,9 @@ public class Network{
 	}
 	
 	public void updateWeights(Tuple t, double expectedValue) {
+		//This is used to set the proper inputs
 		evaluate(t);
+		
 		//Calc gradient for outputneuron
 		network.get(2)[0].calcGradient(expectedValue);
 		
@@ -100,12 +102,31 @@ public class Network{
 		((InputNeuron) network.get(0)[1]).setInput(s.downCellContent);
 		((InputNeuron) network.get(0)[2]).setInput(s.leftCellContent);
 		((InputNeuron) network.get(0)[3]).setInput(s.rightCellContent);
-		((InputNeuron) network.get(0)[4]).setInput(s.distance);		
+		((InputNeuron) network.get(0)[4]).setInput(s.distanceX);		
+		((InputNeuron) network.get(0)[5]).setInput(s.distanceY);		
 		
-		((InputNeuron) network.get(0)[5]).setInput(t.getAction().getAction());
+
+		if(t.getAction().getAction() == Board.MOVE_UP) {
+			((InputNeuron) network.get(0)[State.SIZE]).setInput(0);
+			((InputNeuron) network.get(0)[State.SIZE+1]).setInput(-1);
+		}
+		if(t.getAction().getAction() == Board.MOVE_DOWN) {
+			((InputNeuron) network.get(0)[State.SIZE]).setInput(0);
+			((InputNeuron) network.get(0)[State.SIZE+1]).setInput(+1);
+		}
+		if(t.getAction().getAction() == Board.MOVE_LEFT) {
+			((InputNeuron) network.get(0)[State.SIZE]).setInput(-1);
+			((InputNeuron) network.get(0)[State.SIZE+1]).setInput(0);
+		}
+		if(t.getAction().getAction() == Board.MOVE_RIGHT) {
+			((InputNeuron) network.get(0)[State.SIZE]).setInput(+1);
+			((InputNeuron) network.get(0)[State.SIZE+1]).setInput(0);
+		}
 		
 		work();
 		return network.get(2)[0].getResult();
 	}
+	
+	
 	
 }

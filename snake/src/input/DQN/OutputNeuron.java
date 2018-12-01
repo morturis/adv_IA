@@ -18,24 +18,21 @@ public class OutputNeuron extends Neuron {
 		for(Synapse s: inputList) {
 			sum += s.start.getResult() * s.weight;
 		}
-		//result = sum;
-		result = Math.tanh(sum);
-		//System.out.println("o "+result);
+		//Sigmoid
+		result = 1/(1+Math.pow(Math.E, -sum));
 	}
 
-	@Override
 	void updateWeights() {
 		for(Synapse s : inputList) {
-			double deltaOldWeight = s.deltaWeight;
-			double deltaNewWeight = LEARNING_RATE*s.start.getResult() * gradient+DISCOUNT_FACTOR * deltaOldWeight;
-			s.deltaWeight = deltaNewWeight;
-			s.weight += deltaNewWeight;
+			//wegith = weight + Learningrate*error*input
+			s.weight = s.weight + LEARNING_RATE*gradient*s.start.getResult();
 		}		
 	}
 
 	@Override
 	protected void calcGradient(double expectedValue) {
-		gradient = Math.pow((expectedValue - result),2)*outputDerivative();	
+		gradient = (expectedValue - result)*outputDerivative();
+		//System.out.println(outputDerivative()+ "x");
 	}
 
 }

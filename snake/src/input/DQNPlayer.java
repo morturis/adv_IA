@@ -4,12 +4,11 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import board.Board;
 import input.DQN.Network;
+import input.DQN.Neuron;
 
 public class DQNPlayer extends Player{
-	public static final double LEARNING_RATE = 0.1;
-	public static final double DISCOUNT_FACTOR = 0.9;
 	
-	int randomMoves = 100;
+	int randomMoves = 100000;
 	private Network network;
 	State s;
 	public DQNPlayer(Board board) {
@@ -28,13 +27,11 @@ public class DQNPlayer extends Player{
 		double resDown = network.evaluate(tupleDown);
 		double resLeft = network.evaluate(tupleLeft);
 		double resRight = network.evaluate(tupleRight);
-		System.out.println(resUp + "up");
-		System.out.println(resDown + "down");
-		System.out.println(resLeft + "left");
-		System.out.println(resRight + "right");
+		
 		double max = 0;
-		System.out.println(randomMoves);
+		
 		if(randomMoves > 0) {
+			System.out.println(randomMoves);
 			switch(ThreadLocalRandom.current().nextInt(0, 4)) {
 			case 0:
 				max = resUp;
@@ -55,21 +52,21 @@ public class DQNPlayer extends Player{
 			max = Math.max(max,  resLeft);
 			max = Math.max(max, resRight);
 		}
-		
+		System.out.println("chosen "+max);
 		if(max == resUp) {
-			System.out.println("up");
+			//System.out.println("up"+resUp);
 			return tupleUp.getAction();
 		}
 		if(max == resDown) {
-			System.out.println("down");
+			//System.out.println("down"+resDown);
 			return tupleDown.getAction();
 		}
 		if(max == resLeft) {
-			System.out.println("left");
+			//System.out.println("left"+resLeft);
 			return tupleLeft.getAction();
 		}
 		if(max == resRight) {
-			System.out.println("right");
+			//System.out.println("right"+resRight);
 			return tupleRight.getAction();	
 		}
 		return null;
@@ -78,20 +75,47 @@ public class DQNPlayer extends Player{
 	void takeAction(Action a) {
 		//if(a == null) throw new RuntimeException("null action");
 		board.moveSnake(a);	//This sets the reward
-		network.updateWeights(new Tuple(s, a), reward);
+		double expectedValue;
+		if (reward <0) expectedValue = reward;
+		else {
+			expectedValue = reward + Neuron.LEARNING_RATE * predict(new State(a, board));
+		}
+		network.updateWeights(new Tuple(s, a), expectedValue);
 		reward = 0;
-		System.out.println("---");
 		
 	}
 	
+	
+	double predict(State s) {
+		Tuple tupleUp = new Tuple(s, new Action(Board.MOVE_UP));
+		Tuple tupleDown = new Tuple(s, new Action(Board.MOVE_DOWN));
+		Tuple tupleLeft = new Tuple(s, new Action(Board.MOVE_LEFT));
+		Tuple tupleRight = new Tuple(s, new Action(Board.MOVE_RIGHT));
+		double resUp = network.evaluate(tupleUp);
+		double resDown = network.evaluate(tupleDown);
+		double resLeft = network.evaluate(tupleLeft);
+		double resRight = network.evaluate(tupleRight);
+		
+		double max = Math.max(resUp, resDown);
+		max = Math.max(max, resLeft);
+		max = Math.max(max, resRight);
+		return max;
+	}
+	
 	@Override
-	void saveToFile() {
+	public	void saveToFile() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void run() {
 		// TODO Auto-generated method stub
 		
 	}

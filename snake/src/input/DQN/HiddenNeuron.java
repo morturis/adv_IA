@@ -28,10 +28,8 @@ class HiddenNeuron extends Neuron{
 		for(Synapse s: inputList) {
 			sum += s.start.getResult() * s.weight;
 		}
-		//TODO tanh doesnt work, always outputs 1
-		result = Math.tanh(sum);
-		//result = sum;
-		//System.out.println("h "+result);
+		//Sigmoid
+		result = 1/(1+Math.pow(Math.E, -sum));
 	}
 	
 	void calcGradient() {
@@ -42,13 +40,9 @@ class HiddenNeuron extends Neuron{
 		gradient = sum*outputDerivative();
 	}
 
-	@Override
 	void updateWeights() {
 		for(Synapse s : inputList) {
-			double deltaOldWeight = s.deltaWeight;
-			double deltaNewWeight = LEARNING_RATE*s.start.getResult() * gradient+DISCOUNT_FACTOR * deltaOldWeight;
-			s.deltaWeight = deltaNewWeight;
-			s.weight += deltaNewWeight;
+			s.weight = s.weight + LEARNING_RATE*gradient*s.start.getResult();
 		}		
 	}
 

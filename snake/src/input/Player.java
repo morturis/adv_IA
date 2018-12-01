@@ -16,7 +16,7 @@ public abstract class Player{
 	
 	abstract Action chooseAction();	
 	abstract void update();
-	abstract void saveToFile();
+	public abstract void saveToFile();
 	abstract void takeAction(Action a) ;
 	
 	
@@ -25,9 +25,7 @@ public abstract class Player{
 	}
 	
 	
-	public void run() {
-		takeAction(chooseAction());
-	}
+	abstract public void run() ;
 	
 	@Override
 	public int hashCode() {
