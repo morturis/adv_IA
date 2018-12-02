@@ -52,5 +52,22 @@ public class Tuple {
 	public String toString() {
 		return s.toString() + "t" + a.toString();		
 	}
+	public double[] toDoubleArray() {	
+		double[] result = new double[7];
+		result[0] = s.upCellContent;
+		result[1] = s.downCellContent;
+		result[2] = s.leftCellContent;
+		result[3] = s.rightCellContent;
+		/*
+		if(s.distanceX == 0) result[4] = 0;
+		else result[4] = s.distanceX / Math.abs(s.distanceX);
+		if(s.distanceY == 0) result[5] = 0;
+		else result[5] = s.distanceY / Math.abs(s.distanceY);
+		*/
+		result[4] = s.distanceX;
+		result[5] = s.distanceY;
+		result[6] = a.getAction();
+		return result;
+	}
 
 }

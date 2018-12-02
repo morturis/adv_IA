@@ -1,34 +1,47 @@
 package input;
 
+import Persistence.Persistence;
 import board.Board;
 
 public abstract class Player{
-	private volatile static int nextId;
-	final int id;
-	final Board board;
-	int reward;
+	protected  static final double LEARNING_RATE = 0.1;
+	protected  static final double DISCOUNT_FACTOR = 0.9;
 	
-	public Player(Board board) {
+	private volatile static int nextId;
+	protected  double EPSILON = 1.0;
+	protected  final int id;
+	protected  final Board board;
+	protected double reward;
+	protected Persistence p;
+	protected Tuple currentTuple;	//(currentState, actionToBeTaken)
+	protected int counter = 0;
+	
+	protected Player(Board board) {
 		this.id = nextId;
 		nextId++;
 		this.board = board;
 	}
 	
-	abstract Action chooseAction();	
-	abstract void update();
+	protected abstract Action chooseAction();	
+	protected void takeAction(Action a) {
+		board.moveSnake(a);		
+	}
+	protected abstract void update();
 	public abstract void saveToFile();
-	abstract void takeAction(Action a) ;
+
 	
 	
 	public void reward(int x) {
 		reward = x;
 	}
 	
-	
-	abstract public void run() ;
+
+	public void noMoreRandomness() {
+		EPSILON = 0;
+	}
 	
 	@Override
-	public int hashCode() {
+	public  int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
@@ -36,7 +49,7 @@ public abstract class Player{
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public  boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -47,5 +60,17 @@ public abstract class Player{
 		if (id != other.id)
 			return false;
 		return true;
+	}
+	
+	public void run() {
+		counter++;
+		if(counter%10000 == 0 && EPSILON >0.1) EPSILON = EPSILON- 0.1;
+		System.out.println(counter);
+		//This chooses the action, takes the action and receives the reward via the reward field
+		State state = new State(board);
+		Action action = chooseAction();
+		currentTuple = new Tuple(state, action);
+		takeAction(action);		
+		update();
 	}
 }

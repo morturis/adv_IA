@@ -8,9 +8,10 @@ import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
 import board.Board;
 import board.Cell;
-import input.DQNPlayer;
 import input.Player;
-import input.SARSAPlayer;
+import input.DQN.DQNPlayer;
+import input.QLearning.QPlayer;
+import input.SARSA.SARSAPlayer;
 
 @SuppressWarnings("serial")
 public class View extends GraphicsProgram{
@@ -34,7 +35,10 @@ public class View extends GraphicsProgram{
 	public void init() {
 		setSize(Board.BOARD_WIDTH*CELL_SIZE + 100, Board.BOARD_HEIGHT*CELL_SIZE);
 		board = new Board();
-		p1 = board.getPlayer();
+		
+		p1 = new QPlayer(board);
+		
+		board.setPlayer(p1);
 		ArrayCells = board.getArrayCells();
 		viewCells = new GRect[Board.BOARD_WIDTH][Board.BOARD_HEIGHT];
 		int rowOffset = 0;
@@ -52,17 +56,16 @@ public class View extends GraphicsProgram{
 		}
 		buttonEpsilon = new Button("epsilon = 0");
 		buttonEpsilon.addActionListener(new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent a) {
-				if(p1 instanceof SARSAPlayer) {
-					((SARSAPlayer) p1).noMoreRandomness();
-					System.out.println("Stopping epsilon-greedy and assuming map is correct");
-				}
+				p1.noMoreRandomness();
+				System.out.println("Stopping epsilon-greedy and assuming map is correct");
 			}
-			
+				
 		});
 		add(buttonEpsilon, Board.BOARD_WIDTH*CELL_SIZE+5, 5);
+		
 		buttonSave = new Button("Save");
 		buttonSave.addActionListener(new ActionListener() {
 

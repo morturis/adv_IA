@@ -16,7 +16,7 @@ public class State {
 	public int distanceX;
 	public int distanceY;
 	
-	State(Board b){
+	public State(Board b){
 		int x = b.getSnake().getHead().getCellCoord()[0];
 		int y = b.getSnake().getHead().getCellCoord()[1];
 		//Up
@@ -47,12 +47,6 @@ public class State {
 		distanceY = b.getFoodCell().getCellCoord()[1] - y;
 		
 	}
-	
-	//Creates a simulated state of the board AFTER taking action A
-	State (Action a, Board b){
-		//TODO
-	}
-	
 	
 	//Used for persistence
 	public State(String string) {

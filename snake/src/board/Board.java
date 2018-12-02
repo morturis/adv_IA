@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import input.Action;
 import input.Player;
-import input.SARSAPlayer;
+import input.SARSA.SARSAPlayer;
 
 public class Board {
 
@@ -40,7 +40,6 @@ public class Board {
 		}
 		EmptyCellList = new ArrayList<Cell>();
 		snake = new Snake(this);
-		player = new SARSAPlayer(this);
 		reset();
 	
 	}
