@@ -1,7 +1,7 @@
 package input;
 
 import Persistence.Persistence;
-import board.Board;
+import board.SnakeBoard;
 
 public abstract class Player{
 	protected  static final double LEARNING_RATE = 0.1;
@@ -10,13 +10,13 @@ public abstract class Player{
 	private volatile static int nextId;
 	protected  double EPSILON = 1.0;
 	protected  final int id;
-	protected  final Board board;
+	protected  final SnakeBoard board;
 	protected double reward;
 	protected Persistence p;
 	protected Tuple currentTuple;	//(currentState, actionToBeTaken)
 	protected int counter = 0;
 	
-	protected Player(Board board) {
+	protected Player(SnakeBoard board) {
 		this.id = nextId;
 		nextId++;
 		this.board = board;

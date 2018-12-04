@@ -5,9 +5,9 @@ import java.util.LinkedList;
 
 public class Snake {
 	private LinkedList<Cell> snakeCells;
-	private Board board;
+	private SnakeBoard board;
 	
-	public Snake (Board board) {
+	public Snake (SnakeBoard board) {
 		snakeCells = new LinkedList<Cell>();
 		this.board = board;
 		
@@ -21,8 +21,8 @@ public class Snake {
 	public void resetSnake() {
 		snakeCells.clear();
 		int[] snakePos = new int[2];
-		snakePos[0] = (int) Board.BOARD_WIDTH/2;
-		snakePos[1] = (int) Board.BOARD_HEIGHT/2;
+		snakePos[0] = (int) SnakeBoard.BOARD_WIDTH/2;
+		snakePos[1] = (int) SnakeBoard.BOARD_HEIGHT/2;
 		Cell[][] boardCells = board.getArrayCells();
 		snakeCells.addFirst(boardCells[snakePos[0]-2][snakePos[1]]);
 		snakeCells.addFirst(boardCells[snakePos[0]-1][snakePos[1]]);

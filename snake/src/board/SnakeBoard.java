@@ -7,7 +7,7 @@ import input.Action;
 import input.Player;
 import input.SARSA.SARSAPlayer;
 
-public class Board {
+public class SnakeBoard {
 
 	public final static int BOARD_WIDTH = 6;
 	public final static int BOARD_HEIGHT = 5;
@@ -29,7 +29,7 @@ public class Board {
 	
 	private volatile int snakeDir;
 	
-	public Board() {
+	public SnakeBoard() {
 		this.id = nextId;
 		nextId++;
 		ArrayCells = new Cell[BOARD_WIDTH][BOARD_HEIGHT];
@@ -125,7 +125,7 @@ public class Board {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Board other = (Board) obj;
+		SnakeBoard other = (SnakeBoard) obj;
 		if (id != other.id)
 			return false;
 		return true;

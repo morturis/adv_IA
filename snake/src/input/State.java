@@ -1,7 +1,7 @@
 package input;
 
 
-import board.Board;
+import board.SnakeBoard;
 import board.Cell;
 
 public class State {
@@ -16,7 +16,7 @@ public class State {
 	public int distanceX;
 	public int distanceY;
 	
-	public State(Board b){
+	public State(SnakeBoard b){
 		int x = b.getSnake().getHead().getCellCoord()[0];
 		int y = b.getSnake().getHead().getCellCoord()[1];
 		//Up
@@ -32,13 +32,13 @@ public class State {
 			if(b.getCell(x-1, y).getContent() == Cell.SNAKE) leftCellContent = UNSAFE;
 		}
 		//Down
-		if(y+1 >Board.BOARD_HEIGHT-1) {
+		if(y+1 >SnakeBoard.BOARD_HEIGHT-1) {
 			downCellContent = UNSAFE;
 		}else {
 			if(b.getCell(x, y+1).getContent() == Cell.SNAKE) downCellContent = UNSAFE;
 		}
 		//Right
-		if(x+1 >Board.BOARD_WIDTH-1) {
+		if(x+1 >SnakeBoard.BOARD_WIDTH-1) {
 			rightCellContent = UNSAFE;
 		}else {
 			if(b.getCell(x+1, y).getContent() == Cell.SNAKE) rightCellContent = UNSAFE;

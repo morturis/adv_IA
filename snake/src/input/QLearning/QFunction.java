@@ -2,7 +2,7 @@ package input.QLearning;
 
 import java.util.HashMap;
 
-import board.Board;
+import board.SnakeBoard;
 import input.Tuple;
 
 public class QFunction {
@@ -10,7 +10,7 @@ public class QFunction {
 	
 	public QFunction() {
 		map = new HashMap<Tuple, Double>();
-		map.putIfAbsent(null, (double) Board.REWARD_COLLIDE);
+		map.putIfAbsent(null, (double) SnakeBoard.REWARD_COLLIDE);
 	}
 
 	public double function(Tuple t) {

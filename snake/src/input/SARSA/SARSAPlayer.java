@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 
 import Persistence.Persistence;
-import board.Board;
+import board.SnakeBoard;
 import input.Action;
 import input.Player;
 import input.State;
@@ -14,7 +14,7 @@ import input.Tuple;
 public class SARSAPlayer extends Player{
 	SARSAQFunction q;
 	
-	public SARSAPlayer(Board board) {
+	public SARSAPlayer(SnakeBoard board) {
 		super(board);
 		q = new SARSAQFunction();
 		
@@ -30,10 +30,10 @@ public class SARSAPlayer extends Player{
 	@Override
 	public	Action chooseAction() {
 		State s = new State(board);
-		Tuple tupleUp = new Tuple(s, new Action(Board.MOVE_UP));
-		Tuple tupleDown = new Tuple(s, new Action(Board.MOVE_DOWN));
-		Tuple tupleLeft = new Tuple(s, new Action(Board.MOVE_LEFT));
-		Tuple tupleRight = new Tuple(s, new Action(Board.MOVE_RIGHT));
+		Tuple tupleUp = new Tuple(s, new Action(SnakeBoard.MOVE_UP));
+		Tuple tupleDown = new Tuple(s, new Action(SnakeBoard.MOVE_DOWN));
+		Tuple tupleLeft = new Tuple(s, new Action(SnakeBoard.MOVE_LEFT));
+		Tuple tupleRight = new Tuple(s, new Action(SnakeBoard.MOVE_RIGHT));
 		
 		double resultUp = q.function(tupleUp);
 		double resultDown = q.function(tupleDown);
@@ -76,7 +76,7 @@ public class SARSAPlayer extends Player{
 		Action actionPrime = chooseAction();
 		
 		Tuple tuplePrime = new Tuple(statePrime, actionPrime);
-		if(reward == Board.REWARD_COLLIDE) tuplePrime = null;
+		if(reward == SnakeBoard.REWARD_COLLIDE) tuplePrime = null;
 		q.update(currentTuple, tuplePrime, reward, LEARNING_RATE, DISCOUNT_FACTOR);
 		reward = 0;		
 	}
