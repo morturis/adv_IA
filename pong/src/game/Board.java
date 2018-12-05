@@ -1,40 +1,40 @@
 package game;
 
-import input.AIPlayer;
-
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import input.Player;
+import view.View;
+
+
 public class Board {
-	public final static int BOARD_HEIGHT = 600;
-	public final static int BOARD_WIDTH = 600;
-	public final static int PLAYER_LENGTH = 60;
-	public final static int PLAYER_HEIGHT = 20;
-	public final static int PLAYER_SPEED = 60;
-	public final static int BALL_SIZE = 6;
-	public final static int BALL_SPEED = 10;
+	public final static int BOARD_HEIGHT = 400;
+	public final static int BOARD_WIDTH = 400;
+	public final static int PLAYER_SPEED = 8;
+	public final static int BALL_SPEED = 7;
 	public final static int TOP_PLAYER_YOFFSET = 0;
-	public final static int BOTTOM_PLAYER_YOFFSET = BOARD_HEIGHT-PLAYER_HEIGHT;
-	final static int GOAL_REWARD = 10;
-	final static int HIT_REWARD = 1;
+	public final static int BOTTOM_PLAYER_YOFFSET = BOARD_HEIGHT-View.PLAYER_HEIGHT;
+	public final static int REWARD_GOAL = 10;
+	public final static int REWARD_HIT = 1;
+	public final static int REWARD_MISS = -8;
+	
 	static int nextId = 1;
 	int id;
 	
-	int move_up_speed;
-	double move_right_speed;
 	
 	int ballX;
 	int ballY;
 	
-	int top_player_x;
-	int bottom_player_x;
+	int ballXSpeed;
+	int ballYSpeed;
 	
-	int top_player_score = 0;
-	int bottom_player_score = 0;
+	int p0_x;
+	int p1_x;
 	
-	AIPlayer p0;	//top
-	AIPlayer p1;	//bot
-	public boolean terminatePlayers = false;
+	int p0_score = 0;
+	int p1_score = 0;
+	
+	Player p0;	//top
+	Player p1;	//bot
 	
 	/*
 	 * Initializes or resets the board 
@@ -44,58 +44,41 @@ public class Board {
 		this.id = nextId;
 		nextId++;
 		resetBall();
-		//top_player_x  = (BOARD_WIDTH-PLAYER_LENGTH)/2;
-		//bottom_player_x = (BOARD_WIDTH-PLAYER_LENGTH)/2;
-		top_player_x = 0;
-		bottom_player_x = 0;
+		resetPlayers();
 	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Board other = (Board) obj;
-		if (id != other.id)
-			return false;
-		return true;
+	private void resetPlayers() {
+		p0_x  = 0;
+		p1_x = 0;
 	}
 	/*
 	 * Takes players to be able to give them rewards
 	 */
-	public void setPlayers(AIPlayer p0, AIPlayer p1) {
-		this.p0 = p0;
-		this.p1 = p1;
+	public void setPlayer(int id, Player p) {
+		if(id == 0) p0 = p;
+		else if (id == 1) p1 = p;
 	}
+	
 	/*
 	 * Checks the position of the ball and the players to calculate possible collisions
 	 * doesn't resolve the collisions, but calls collideWall() or collide() to do so
 	 */
-	public void checkCollisions() {
-		if(ballX<=0) collideWall();
-		if(ballX>=BOARD_WIDTH) collideWall();
+	private void checkCollisions() {
+		if(ballX < 0) collideWall();
+		if(ballX > BOARD_WIDTH) collideWall();
+		
 		//Checking collisions with top player
-		if(ballY<=PLAYER_HEIGHT) {	//If true, is in a zone of potential collision
-			if(ballX+BALL_SIZE>=top_player_x && ballX <= top_player_x+PLAYER_LENGTH) {
-				collide(0);
-				p0.reward(HIT_REWARD);
+		if(ballY<=View.PLAYER_HEIGHT) {	//If true, is in a zone of potential collision
+			if(ballX + View.BALL_SIZE >= p0_x && ballX <= p0_x + View.PLAYER_WIDTH) {
+				p0.reward(REWARD_HIT);
+				collidePlayer(0);
 			}
 		}
 		
 		//Check collisions with bottom player
-		if(ballY>=BOARD_HEIGHT-PLAYER_HEIGHT) {	//If true is in a zone of potential collision
-			if(ballX+BALL_SIZE>=bottom_player_x &&	ballX<=bottom_player_x+PLAYER_LENGTH) {	
-				collide(1);
-				p1.reward(HIT_REWARD);
+		if(ballY>=BOARD_HEIGHT-View.PLAYER_HEIGHT) {	//If true is in a zone of potential collision
+			if(ballX + View.BALL_SIZE >= p1_x && ballX<= p1_x + View.PLAYER_WIDTH) {
+				p1.reward(REWARD_HIT);
+				collidePlayer(1);
 			}
 		}
 	}
@@ -103,27 +86,30 @@ public class Board {
 	/*
 	 * Resolves collision with any player
 	 */
-	private void collide(int playerID) {
-		double contactPoint = 0;
-		if(playerID == 0) {
-			move_up_speed = BALL_SPEED;	
-			contactPoint = (top_player_x+PLAYER_LENGTH/2)-(ballX+BALL_SIZE/2);
-		}else if (playerID == 1) {
-			move_up_speed = -BALL_SPEED;
-			contactPoint = (bottom_player_x+PLAYER_LENGTH/2)-(ballX+BALL_SIZE/2);	
+	private void collidePlayer(int whichPlayer) {
+		ballYSpeed = -ballYSpeed;
+		float factor;
+		if(whichPlayer == 0) {
+			float playerMiddle = p0_x + View.PLAYER_WIDTH/2;
+			factor = ballX - playerMiddle;
+			factor = factor/playerMiddle;
+			ballY = View.PLAYER_HEIGHT+1;
+		}else {
+			float playerMiddle = p1_x + View.PLAYER_WIDTH/2;
+			factor = ballX - playerMiddle;
+			factor = factor/playerMiddle;
+			ballY = BOARD_HEIGHT -  View.PLAYER_HEIGHT -1;
 		}
-		contactPoint = contactPoint/PLAYER_LENGTH/2;
-		//move_right_speed = contactPoint*BALL_SPEED*2+ThreadLocalRandom.current().nextInt(-1, 3);
-		move_right_speed = contactPoint*BALL_SPEED*2.5;
-		move_right_speed*=-1;
-		System.out.println(contactPoint + " " + move_right_speed + " " + move_up_speed);
+		ballXSpeed = Math.round(-factor*BALL_SPEED);
+		int randomNum = ThreadLocalRandom.current().nextInt(-1, 2);
+		ballXSpeed += randomNum;	//This is here to avoid infinite loops because those are ugly to watch
 	}
 	
 	/*
 	 * Resolves collision with a wall
 	 */
 	private void collideWall() {
-		move_right_speed = -move_right_speed;
+		ballXSpeed = - ballXSpeed;
 	}
 	
 	/*
@@ -131,39 +117,36 @@ public class Board {
 	 * uses the current position and the current speeds to calculate the new position
 	 * This is the method that checks for GOALS
 	 */
-	public void moveBall () {
-		ballX = (int) (ballX + Math.round(move_right_speed));
-		ballY = ballY+move_up_speed;
-		if(ballY<=0) {
-			bottom_player_score++;
-			if(p0 instanceof AIPlayer) ((AIPlayer) p0).reward(GOAL_REWARD);
-			if(p1 instanceof AIPlayer) ((AIPlayer) p1).reward(-GOAL_REWARD);
+	private void moveBall () {
+		ballX += ballXSpeed;
+		ballY += ballYSpeed;
+		if(ballY + View.BALL_SIZE/2< 0) {
+			//bottom player scores (p1)
+			p1.reward(REWARD_GOAL);
+			p0.reward(REWARD_MISS);
+			p1_score++;
 			resetBall();
-		}else if(ballY>=BOARD_HEIGHT) {
-			top_player_score++;
-			if(p1 instanceof AIPlayer) ((AIPlayer) p1).reward(GOAL_REWARD);
-			if(p0 instanceof AIPlayer) ((AIPlayer) p0).reward(-GOAL_REWARD);
+			//resetPlayers();
+		}else if (ballY + View.BALL_SIZE/2> BOARD_HEIGHT) {
+			//Top player scores (p0)
+			p0.reward(REWARD_GOAL);
+			p1.reward(REWARD_MISS);
+			p0_score++;
 			resetBall();
 		}
 	}
 	
-	/*
-	 * Public method to move a given player
-	 * @params id, id of the player to be moved
-	 * id is 1 for bottom or 0 for top
-	 * @params dir, direction to be moved
-	 * dir is +1 for rightmove or -1 for leftmove
-	 * also allows dir = 0 to remain still
-	 */
-	public synchronized void movePlayer(int id, int dir) {
-		if(id == 0) {
-			bottom_player_x = bottom_player_x+PLAYER_SPEED*dir;
-			if(bottom_player_x <0) bottom_player_x = 0;
-			if(bottom_player_x > BOARD_WIDTH-PLAYER_LENGTH) bottom_player_x = BOARD_WIDTH-PLAYER_LENGTH;
-		}else if(id == 1) {
-			top_player_x = top_player_x+PLAYER_SPEED*dir;
-			if(top_player_x <0) top_player_x = 0;
-			if(top_player_x >BOARD_WIDTH-PLAYER_LENGTH) top_player_x = BOARD_WIDTH-PLAYER_LENGTH;
+	
+	public void movePlayer(int id, int dir) {
+		//p0 is top p1 is bot
+		if(id == 1) {
+			p1_x += PLAYER_SPEED*dir;
+			if(p1_x < 0) p1_x = 0;
+			if(p1_x > BOARD_WIDTH - View.PLAYER_WIDTH) p1_x = BOARD_WIDTH-View.PLAYER_WIDTH;
+		}else if(id == 0) {
+			p0_x += PLAYER_SPEED*dir;
+			if(p0_x < 0) p0_x = 0;
+			if(p0_x > BOARD_WIDTH - View.PLAYER_WIDTH) p0_x = BOARD_WIDTH-View.PLAYER_WIDTH;
 		}
 	}
 	
@@ -174,13 +157,14 @@ public class Board {
 	private void resetBall() {
 		ballX = BOARD_WIDTH/2;
 		ballY = BOARD_HEIGHT/2;
-		
-		move_right_speed = ThreadLocalRandom.current().nextInt(-BALL_SPEED*2, BALL_SPEED*2 + 1);
-		Random rando = new Random();
-		if(rando.nextBoolean()) move_up_speed = BALL_SPEED;
-		else move_up_speed = -BALL_SPEED;
+
+		int randomNum = ThreadLocalRandom.current().nextInt(-BALL_SPEED, BALL_SPEED+1);
+		ballXSpeed = randomNum;
+		if(Math.random() > 0.5) ballYSpeed = BALL_SPEED;
+		else ballYSpeed = -BALL_SPEED;
 		
 	}
+	
 	/*
 	 * Returns ball position as follows
 	 * {ballX, ballY}
@@ -194,13 +178,22 @@ public class Board {
 	 * only returns X positions since Y position is constants
 	 */
 	public int[] getPlayersPos() {
-		return new int[] {bottom_player_x, top_player_x};
+		return new int[] {p0_x, p1_x};
 	}
 	
 	public int getScore(int id) {
-		if (id == 0) return top_player_score;
-		else if (id == 1)return bottom_player_score;
+		if (id == 0) return p0_score;
+		else if (id == 1)return p1_score;
 		return -1;
+	}
+	public void pulse() {
+		moveBall();
+		checkCollisions();
+		
+	}
+	public int[] getBallSpeed() {
+		int[] res = {ballXSpeed, ballYSpeed};
+		return res;
 	}
 	
 }

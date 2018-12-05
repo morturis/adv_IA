@@ -1,26 +1,21 @@
 package input;
 
 public class Tuple { 
-	public final ActorState x; 
-	public final Action y; 
+	public final State s; 
+	public final Action a; 
 	  
-	public Tuple(ActorState x, Action y) { 
-		this.x = x; 
-		this.y = y; 
+	public Tuple(State x, Action y) { 
+		this.s = x; 
+		this.a = y; 
 	}
-	  
-	public Tuple(String s) {
-		  String[] tupleAttr = s.split("/");
-		  x = new ActorState(tupleAttr[0]);
-		  y = new Action(tupleAttr[1]);
-	}
+	 
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((x == null) ? 0 : x.hashCode());
-		result = prime * result + ((y == null) ? 0 : y.hashCode());
+		result = prime * result + ((s == null) ? 0 : s.hashCode());
+		result = prime * result + ((a == null) ? 0 : a.hashCode());
 		return result;
 	}
 		
@@ -33,22 +28,30 @@ public class Tuple {
 		if (getClass() != obj.getClass())
 			return false;
 		Tuple other = (Tuple) obj;
-		if (x == null) {
-			if (other.x != null)
+		if (s == null) {
+			if (other.s != null)
 				return false;
-		} else if (!x.equals(other.x))
+		} else if (!s.equals(other.s))
 			return false;
-		if (y == null) {
-			if (other.y != null)
+		if (a == null) {
+			if (other.a != null)
 				return false;
-		} else if (!y.equals(other.y))
+		} else if (!a.equals(other.a))
 			return false;
 		return true;
 	} 
 	
 	
 	public String toString(){
-		return x.toString() + "/" + y.toString();
+		return s.toString() + "/" + a.toString();
+	}
+	
+	public Action getAction() {
+		return a;
+	}
+	
+	public State getState() {
+		return s;
 	}
 	
 	

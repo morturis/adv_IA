@@ -2,9 +2,15 @@ package input;
 
 import game.Board;
 
-public class Player{
-	final int id;
-	final Board board;
+public abstract class Player{
+	protected  static final double LEARNING_RATE = 0.1;
+	protected  static final double DISCOUNT_FACTOR = 0.9;
+	protected final int id;
+	protected final Board board;
+	protected double reward = 0;
+	protected Tuple currentTuple;
+	protected int counter = 0;
+	protected double EPSILON = 0.9;
 	
 	public Player(int id, Board board) {
 		this.id = id;
@@ -17,35 +23,32 @@ public class Player{
 	 * dir = 0 = stay
 	 * dir = 1 = right
 	 */
-	void move(int dir) {
-		board.movePlayer(id, dir);
-	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((board == null) ? 0 : board.hashCode());
-		result = prime * result + id;
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Player other = (Player) obj;
-		if (board == null) {
-			if (other.board != null)
-				return false;
-		} else if (!board.equals(other.board))
-			return false;
-		if (id != other.id)
-			return false;
-		return true;
-	}	
+	protected abstract Action chooseAction();
+	protected void takeAction(Action a) {
+		board.movePlayer(id, a.action);
+	}
+	protected abstract void update();
+	public abstract void saveToFile();
+	public void reward (int r) {
+		this.reward = r;
+	}
+	
+	public void pulse() {
+		State s = new State(id, board);
+		Action a = chooseAction();
+		currentTuple = new Tuple(s, a);
+		takeAction(a);
+		update();
+		counter++;
+		if(counter%1000 == 0 && EPSILON > 0.1) EPSILON = EPSILON - 0.1;
+		System.out.println(counter);
+	}
+	
+	public void noMoreRandomness() {
+		EPSILON = 0;
+	}
+	
+
 }

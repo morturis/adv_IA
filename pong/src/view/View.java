@@ -1,6 +1,9 @@
 package view;
 
+import java.awt.Button;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
@@ -10,69 +13,65 @@ import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
 import game.Board;
 import input.*;
+import input.QLearning.QPlayer;
+import input.SARSA.SARSAPlayer;
 import persistence.Persistence;
 
 @SuppressWarnings("serial")
 public class View extends GraphicsProgram{
 	//Refresh rate of the screen
 	final static int FPS = 100;
-	
-	
+	public final static int PLAYER_HEIGHT = 8;
+	public final static int PLAYER_WIDTH = 40;
+	public static final int BALL_SIZE = 6;
+	Button buttonEpsilon;
+	Button changeSpeed;
 	Board board;
 	GRect field;	
 	GOval ball;
 	
-	Thread ai1;
-	GRect p1;
-	AIPlayer player1;
+	GRect p0rect;
+	Player p0;
 	
-	Thread ai2;
-	GRect p2;
-	AIPlayer player2;
+	GRect p1rect;
+	Player p1;
 	
-	GLabel scoreP1;
-	GLabel scoreP2;
+	GLabel scorep0;
+	GLabel scorep1;
 	
-	Persistence persist;
+	//The higher wait time, the slower it plays
+	int waitTime = 1;
 	
 	public synchronized void init() {
-		persist = new Persistence("output.txt");
-		addKeyListeners();
 		
-		setSize(Board.BOARD_HEIGHT+50, Board.BOARD_WIDTH+50);
+		setSize(Board.BOARD_HEIGHT+200, Board.BOARD_WIDTH+20);
 		board = new Board();
 		board.init();
 		
-		int[] playersPos = board.getPlayersPos();		
-		p1 = new GRect(Board.PLAYER_LENGTH, Board.PLAYER_HEIGHT);
-		p1.setLocation(playersPos[0], Board.BOTTOM_PLAYER_YOFFSET);	
-		p1.setFillColor(Color.YELLOW);
-		p1.setFilled(true);
-		p2 = new GRect(Board.PLAYER_LENGTH, Board.PLAYER_HEIGHT);
-		p2.setLocation(playersPos[1], Board.TOP_PLAYER_YOFFSET);
-		p2.setFillColor(Color.YELLOW);
-		p2.setFilled(true);
-		
-		player1 = new AIPlayer(0, board);
-		player2 = new AIPlayer(1, board);
-		
-		
-		try {
-			persist.loadFromFile(player1, player2);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		int type = 0;
+		if(type == 0) {
+			p0 = new QPlayer(0, board);
+			p1 = new QPlayer(1, board);
+		}else {
+			p0 = new SARSAPlayer(0, board);
+			p1 = new SARSAPlayer(1, board);
 		}
+		board.setPlayer(0, p0);
+		board.setPlayer(1, p1);
 		
+		int[] playersPos = board.getPlayersPos();		
 		
-		board.setPlayers(player1, player2);
-		ai1 = new Thread(player1);
-		ai2 = new Thread(player2);
+		//p0 is top p1 is bot
+		p0rect = new GRect(PLAYER_WIDTH, PLAYER_HEIGHT);
+		p0rect.setLocation(playersPos[0], Board.TOP_PLAYER_YOFFSET);	
+		p0rect.setFillColor(Color.YELLOW);
+		p0rect.setFilled(true);
+		p1rect = new GRect(PLAYER_WIDTH, PLAYER_HEIGHT);
+		p1rect.setLocation(playersPos[1], Board.BOTTOM_PLAYER_YOFFSET);
+		p1rect.setFillColor(Color.YELLOW);
+		p1rect.setFilled(true);
 		
-		ai1.start();
-		ai2.start();
-		
-		ball = new GOval(Board.BALL_SIZE, Board.BALL_SIZE);
+		ball = new GOval(BALL_SIZE, BALL_SIZE);
 		int[]ballPos = board.getBallPos();
 		ball.setLocation(ballPos[0], ballPos[1]);
 		ball.setFillColor(Color.WHITE);
@@ -82,20 +81,50 @@ public class View extends GraphicsProgram{
 		field.setFillColor(Color.BLACK);
 		field.setFilled(true);
 		
-		scoreP1 = new GLabel (""+board.getScore(0), Board.BOARD_WIDTH+10, 10);
-		scoreP2 = new GLabel (""+board.getScore(1), Board.BOARD_WIDTH+10, Board.BOARD_HEIGHT);
+		scorep0 = new GLabel (""+board.getScore(0), Board.BOARD_WIDTH+10, 10);
+		scorep1 = new GLabel (""+board.getScore(1), Board.BOARD_WIDTH+10, Board.BOARD_HEIGHT-10);
 				
 		add(field);
-		add(p1); add(p2); add(ball);
-		add(scoreP1); add(scoreP2);
+		add(p0rect); add(p1rect); add(ball);
+		add(scorep0); add(scorep1);
+		
+		changeSpeed = new Button("Change speed");
+		changeSpeed.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(waitTime == 1) waitTime = 5;
+				else waitTime = 1;
+			}
+			
+		});
+		add(changeSpeed, Board.BOARD_WIDTH+10, 50);
+		buttonEpsilon = new Button("epsilon = 0");
+		buttonEpsilon.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent a) {
+				p0.noMoreRandomness();
+				p1.noMoreRandomness();
+				System.out.println("Stopping epsilon-greedy and assuming map is correct");
+			}
+				
+		});
+		add(buttonEpsilon, Board.BOARD_WIDTH + 10 , 25);
 	}
 	
-	public void run(){
+	public synchronized void run(){
 		while(true) {
-			pause(1000/FPS);
 			displayBoard();	
-			board.moveBall();
-			board.checkCollisions();
+			p0.pulse();
+			p1.pulse();
+			board.pulse();
+			try {
+				wait(waitTime);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 	/*
@@ -104,36 +133,12 @@ public class View extends GraphicsProgram{
 	void displayBoard() {
 		int[] playersPos = board.getPlayersPos();
 		int[] ballPos = board.getBallPos();
-		p1.setLocation(playersPos[0], Board.BOTTOM_PLAYER_YOFFSET);
-		p2.setLocation(playersPos[1], Board.TOP_PLAYER_YOFFSET);
+		p0rect.setLocation(playersPos[0], Board.BOTTOM_PLAYER_YOFFSET);
+		p1rect.setLocation(playersPos[1], Board.TOP_PLAYER_YOFFSET);
 		ball.setLocation(ballPos[0], ballPos[1]);
-		scoreP1.setLabel(board.getScore(0)+"");
-		scoreP2.setLabel(board.getScore(1)+"");
+		scorep0.setLabel(board.getScore(0)+"");
+		scorep1.setLabel(board.getScore(1)+"");
 	}	
 	
-	public synchronized void keyPressed(KeyEvent e) {
-		if(e.getKeyCode() == KeyEvent.VK_UP) {
-			System.out.println("Saving player progress");
-			board.terminatePlayers = true;
-			try {
-				ai1.join();
-				System.out.println("P1 finished");
-				ai2.join();
-				System.out.println("P2 finished");
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			
-			try {
-				persist.saveToFile(player1.getMap(), player2.getMap());
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-
-			System.out.println("done");
-			
-
-		}
-	}
 	
 }

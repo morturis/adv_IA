@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import input.AIPlayer;
 import input.Tuple;
 
 public class Persistence{
@@ -23,7 +22,7 @@ public class Persistence{
 		System.out.println(output.getAbsolutePath());
 		
 	}
-
+	
 	public synchronized void saveToFile(HashMap<Tuple, Double> map1, HashMap<Tuple, Double> map2) throws IOException{
 		writer = new BufferedWriter(new FileWriter(output));
 		Set<Entry<Tuple, Double>> set = map1.entrySet();
@@ -51,8 +50,8 @@ public class Persistence{
 		writer.flush();
 		writer.close();
 	}
-	
-	public synchronized void loadFromFile(AIPlayer player1, AIPlayer player2) throws IOException {
+	/*
+	public synchronized void loadFromFile(Player player1, Player player2) throws IOException {
 		reader = new BufferedReader(new FileReader(output));
 		
 		HashMap<Tuple, Double> loadedMap1 = new HashMap<>();
@@ -85,4 +84,5 @@ public class Persistence{
 		
 		reader.close();
 	}
+	*/
 }
