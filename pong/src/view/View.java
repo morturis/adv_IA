@@ -4,8 +4,6 @@ import java.awt.Button;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
 
 import acm.graphics.GLabel;
 import acm.graphics.GOval;
@@ -19,8 +17,6 @@ import persistence.Persistence;
 
 @SuppressWarnings("serial")
 public class View extends GraphicsProgram{
-	//Refresh rate of the screen
-	final static int FPS = 100;
 	public final static int PLAYER_HEIGHT = 8;
 	public final static int PLAYER_WIDTH = 40;
 	public static final int BALL_SIZE = 6;
@@ -48,7 +44,8 @@ public class View extends GraphicsProgram{
 		board = new Board();
 		board.init();
 		
-		int type = 0;
+		int type = 1;	//Changing this changes the algorithm to be run
+						//1 is Sarsa, 0 is QLearning
 		if(type == 0) {
 			p0 = new QPlayer(0, board);
 			p1 = new QPlayer(1, board);

@@ -31,7 +31,7 @@ public class QPlayer extends Player {
 		double max = Math.max(resRight, resStay);
 		max = Math.max(max, resLeft);
 		
-		//GreedyPolicy
+		//GreedyPolicy (used only for exploration)
 		if(Math.random() > EPSILON) {
 			if(max == resRight) return tupleRight.getAction();
 			if(max == resStay) return tupleStay.getAction();
@@ -52,6 +52,8 @@ public class QPlayer extends Player {
 		return null;
 	}
 	
+	//This is the key difference between both algorithms
+	//QLearning is off-policy so it doesnt call chooseAction again
 	@Override
 	protected
 	void update() {

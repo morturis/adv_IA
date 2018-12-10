@@ -29,13 +29,13 @@ public class View extends GraphicsProgram{
 	Button changeSpeed;
 	int speed = 5;	//lower = faster
 	
-	protected boolean hasSaved = false;
 	
 	public void init() {
 		setSize(SnakeBoard.BOARD_WIDTH*CELL_SIZE + 100, SnakeBoard.BOARD_HEIGHT*CELL_SIZE);
 		board = new SnakeBoard();
 		
-		int type = 0;
+		int type = 1;	//This changes the algorithm to be used
+						//1 is sarsa, 0 is qlearning
 		initPlayer(type);
 		
 		board.setPlayer(p1);
@@ -66,17 +66,7 @@ public class View extends GraphicsProgram{
 		});
 		add(buttonEpsilon, SnakeBoard.BOARD_WIDTH*CELL_SIZE+5, 5);
 		
-		buttonSave = new Button("Save");
-		buttonSave.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent a) {
-				hasSaved  = true;
-				p1.saveToFile();
-			}
-			
-		});
-		add(buttonSave, SnakeBoard.BOARD_WIDTH*CELL_SIZE+5, 25);
+		
 		changeSpeed = new Button("Change speed");
 		changeSpeed.addActionListener(new ActionListener() {
 
@@ -91,11 +81,12 @@ public class View extends GraphicsProgram{
 	}
 	
 	private void initPlayer(int type) {
-		if (type == 1) p1 = new QPlayer(board);
-		else if (type == 0) p1 = new SARSAPlayer(board);
+		if (type == 0) p1 = new QPlayer(board);
+		else if (type == 1) p1 = new SARSAPlayer(board);
 		
 	}
-
+	
+	//Reads board and displays
 	private void displayBoard() {
 		ArrayCells = board.getArrayCells();
 		for(int i = 0; i < SnakeBoard.BOARD_WIDTH;i++) {
@@ -118,16 +109,15 @@ public class View extends GraphicsProgram{
 		}
 	}
 	
-	public synchronized void run() {
-		while(!hasSaved) {
-			displayBoard();
-			p1.run();
-			try {
-				wait(speed);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+	public synchronized void run() {		
+		displayBoard();
+		p1.run();
+		try {
+			wait(speed);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
+
 	}
 }
 	

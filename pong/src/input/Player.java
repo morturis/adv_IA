@@ -24,7 +24,7 @@ public abstract class Player{
 	 * dir = 1 = right
 	 */
 
-
+	
 	protected abstract Action chooseAction();
 	protected void takeAction(Action a) {
 		board.movePlayer(id, a.action);
