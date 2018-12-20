@@ -4,17 +4,17 @@ import Persistence.Persistence;
 import board.SnakeBoard;
 
 public abstract class Player{
-	protected  static final double LEARNING_RATE = 0.1;
-	protected  static final double DISCOUNT_FACTOR = 0.9;
+	protected  static final double LEARNING_RATE = 0.1;	//alfa
+	protected  static final double DISCOUNT_FACTOR = 0.9;	//gamma
 	
 	private volatile static int nextId;
 	protected  double EPSILON = 1.0;
 	protected  final int id;
 	protected  final SnakeBoard board;
 	protected double reward;
-	protected Persistence p;
 	protected Tuple currentTuple;	//(currentState, actionToBeTaken)
 	protected int counter = 0;
+	protected Persistence p;
 	
 	protected Player(SnakeBoard board) {
 		this.id = nextId;

@@ -109,15 +109,16 @@ public class View extends GraphicsProgram{
 		}
 	}
 	
-	public synchronized void run() {		
-		displayBoard();
-		p1.run();
-		try {
-			wait(speed);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+	public synchronized void run() {	
+		while(true) {
+			displayBoard();
+			p1.run();
+			try {
+				wait(speed);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
-
 	}
 }
 	

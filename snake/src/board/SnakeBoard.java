@@ -9,13 +9,13 @@ import input.SARSA.SARSAPlayer;
 
 public class SnakeBoard {
 
-	public final static int BOARD_WIDTH = 6;
-	public final static int BOARD_HEIGHT = 5;
+	public final static int BOARD_WIDTH = 10;
+	public final static int BOARD_HEIGHT = 9;
 	public final static int MOVE_LEFT = -2;
 	public final static int MOVE_RIGHT = 2;
 	public final static int MOVE_UP = -1;
 	public final static int MOVE_DOWN = 1;
-	public final static int REWARD_MOVE = -10;
+	public final static int REWARD_MOVE = 0;
 	public final static int REWARD_FOOD = 500;
 	public final static int REWARD_COLLIDE = -100;
 	private static int nextId = 1;
