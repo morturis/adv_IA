@@ -1,4 +1,4 @@
-package view;
+package pong.view;
 
 import java.awt.Button;
 import java.awt.Color;
@@ -9,11 +9,11 @@ import acm.graphics.GLabel;
 import acm.graphics.GOval;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
-import game.Board;
-import input.*;
-import input.QLearning.QPlayer;
-import input.SARSA.SARSAPlayer;
-import persistence.Persistence;
+//import persistence.Persistence;
+import pong.game.Board;
+import pong.input.*;
+import pong.input.QLearning.QPlayer;
+import pong.input.SARSA.SARSAPlayer;
 
 @SuppressWarnings("serial")
 public class View extends GraphicsProgram{
@@ -38,18 +38,15 @@ public class View extends GraphicsProgram{
 	//The higher wait time, the slower it plays
 	int waitTime = 1;
 	
-	public synchronized void init() {
-		
+	public synchronized void init(int type) {		
 		setSize(Board.BOARD_HEIGHT+200, Board.BOARD_WIDTH+20);
 		board = new Board();
 		board.init();
 		
-		int type = 0;	//Changing this changes the algorithm to be run
-						//1 is Sarsa, 0 is QLearning
-		if(type == 0) {
+		if(type == 1) {
 			p0 = new QPlayer(0, board);
 			p1 = new QPlayer(1, board);
-		}else {
+		}else if (type == 0){
 			p0 = new SARSAPlayer(0, board);
 			p1 = new SARSAPlayer(1, board);
 		}

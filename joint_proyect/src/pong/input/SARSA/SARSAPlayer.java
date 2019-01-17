@@ -1,12 +1,12 @@
-package input.SARSA;
+package pong.input.SARSA;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import game.Board;
-import input.Action;
-import input.Player;
-import input.State;
-import input.Tuple;
+import pong.game.Board;
+import pong.input.Action;
+import pong.input.Player;
+import pong.input.State;
+import pong.input.Tuple;
 
 public class SARSAPlayer extends Player {
 	SARSAQFunction q;
@@ -55,6 +55,8 @@ public class SARSAPlayer extends Player {
 	@Override
 	protected
 	void update() {
+		double previousMapTotal = q.getSum();
+		
 		State statePrime = new State(id, board);
 		//Because sarsa is on-policy, it applies its policy once more in order to update 
 		Action actionPrime = chooseAction();
@@ -62,7 +64,19 @@ public class SARSAPlayer extends Player {
 		Tuple tuplePrime = new Tuple(statePrime, actionPrime);
 		if(reward == Board.REWARD_MISS) tuplePrime = null;
 		q.update(currentTuple, tuplePrime, reward, LEARNING_RATE, DISCOUNT_FACTOR);
-		reward = 0;		
+		reward = 0;	
+		
+		
+		double newMapTotal = q.getSum();
+		if(Math.abs(previousMapTotal-newMapTotal) < 1) {
+			lowIncrementsInARow++;
+			if(lowIncrementsInARow == 100) whenItWasTerminal = counter;
+			if(lowIncrementsInARow >= 100) {
+				System.out.println("Possibly terminal "+ whenItWasTerminal);
+			}
+		}else {
+			lowIncrementsInARow = 0;
+		}
 
 	}
 

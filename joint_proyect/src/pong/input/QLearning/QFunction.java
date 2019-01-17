@@ -1,9 +1,9 @@
-package input.QLearning;
+package pong.input.QLearning;
 
 import java.util.HashMap;
 
-import game.Board;
-import input.Tuple;
+import pong.game.Board;
+import pong.input.Tuple;
 
 public class QFunction {
 	HashMap<Tuple, Double> map;
@@ -32,5 +32,13 @@ public class QFunction {
 	public void setMap(HashMap<Tuple, Double> map) {
 		this.map = map;
 		this.map.putIfAbsent(null, -100.0);
+	}
+	
+	public double getSum() {
+		double result = 0;
+		for(Double d: map.values()) {
+			result += d;
+		}
+		return result;
 	}
 }

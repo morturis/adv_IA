@@ -1,7 +1,8 @@
-package input;
+package snake.input;
 
-import Persistence.Persistence;
-import board.SnakeBoard;
+
+//import Persistence.Persistence;
+import snake.board.SnakeBoard;
 
 public abstract class Player{
 	protected  static final double LEARNING_RATE = 0.1;	//alfa
@@ -14,7 +15,10 @@ public abstract class Player{
 	protected double reward;
 	protected Tuple currentTuple;	//(currentState, actionToBeTaken)
 	protected int counter = 0;
-	protected Persistence p;
+	//protected Persistence p;
+	
+	protected int lowIncrementsInARow;
+	protected int whenItWasTerminal;
 	
 	protected Player(SnakeBoard board) {
 		this.id = nextId;
@@ -73,4 +77,5 @@ public abstract class Player{
 		takeAction(action);		
 		update();
 	}
+	
 }

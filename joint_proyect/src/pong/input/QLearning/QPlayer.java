@@ -1,12 +1,12 @@
-package input.QLearning;
+package pong.input.QLearning;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import game.Board;
-import input.Action;
-import input.Player;
-import input.State;
-import input.Tuple;
+import pong.game.Board;
+import pong.input.Action;
+import pong.input.Player;
+import pong.input.State;
+import pong.input.Tuple;
 
 public class QPlayer extends Player {
 	QFunction q;
@@ -57,6 +57,8 @@ public class QPlayer extends Player {
 	@Override
 	protected
 	void update() {
+		double previousMapTotal = q.getSum();
+		
 		State statePrime = new State(id, board);
 		//Because qlearning is offPolicy it doesnt apply it to calc action-prime
 		Action actionPrime = chooseActionWithoutPolicy();
@@ -65,6 +67,17 @@ public class QPlayer extends Player {
 		if(reward == Board.REWARD_MISS) tuplePrime = null;
 		q.update(currentTuple, tuplePrime, reward, LEARNING_RATE, DISCOUNT_FACTOR);
 		reward = 0;		
+		
+		double newMapTotal = q.getSum();
+		if(Math.abs(previousMapTotal-newMapTotal) < 1) {
+			lowIncrementsInARow++;
+			if(lowIncrementsInARow == 300) whenItWasTerminal = counter;
+			if(lowIncrementsInARow >= 300) {				
+				System.out.println("Possibly terminal "+ whenItWasTerminal);
+			}
+		}else {
+			lowIncrementsInARow = 0;
+		}
 
 	}
 

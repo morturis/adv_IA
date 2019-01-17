@@ -1,16 +1,14 @@
-package board;
+package snake.board;
 
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import input.Action;
-import input.Player;
-import input.SARSA.SARSAPlayer;
+import snake.input.Action;
+import snake.input.Player;
+import snake.input.Sarsa.SARSAPlayer;
 
 public class SnakeBoard {
 
-	public final static int BOARD_WIDTH = 5;
-	public final static int BOARD_HEIGHT = 5;
 	public final static int MOVE_LEFT = -2;
 	public final static int MOVE_RIGHT = 2;
 	public final static int MOVE_UP = -1;
@@ -26,10 +24,13 @@ public class SnakeBoard {
 	private final Snake snake;
 	private Player player;
 	private Cell food;
-	
+	public static int BOARD_WIDTH;
+	public static int BOARD_HEIGHT;
 	private volatile int snakeDir;
 	
-	public SnakeBoard() {
+	public SnakeBoard(int width, int height) {
+		BOARD_WIDTH = width;
+		BOARD_HEIGHT = height;
 		this.id = nextId;
 		nextId++;
 		ArrayCells = new Cell[BOARD_WIDTH][BOARD_HEIGHT];

@@ -1,4 +1,4 @@
-package view;
+package snake.view;
 
 import java.awt.Button;
 import java.awt.Color;
@@ -6,18 +6,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
-import board.SnakeBoard;
-import board.Cell;
-import input.Player;
-import input.QLearning.QPlayer;
-import input.SARSA.SARSAPlayer;
+import snake.board.Cell;
+import snake.board.SnakeBoard;
+import snake.input.Player;
+import snake.input.QLearning.QPlayer;
+import snake.input.Sarsa.SARSAPlayer;
 
 @SuppressWarnings("serial")
 public class View extends GraphicsProgram{
 	
-	public View () {
-		super();
-	}
+	
 	private final static int CELL_SIZE = 40;
 	
 	private Player p1;
@@ -30,17 +28,15 @@ public class View extends GraphicsProgram{
 	int speed = 5;	//lower = faster
 	
 	
-	public void init() {
-		setSize(SnakeBoard.BOARD_WIDTH*CELL_SIZE + 100, SnakeBoard.BOARD_HEIGHT*CELL_SIZE);
-		board = new SnakeBoard();
+	public void init(int paramWidth, int paramHeight, int type) {
+		setSize(paramWidth*CELL_SIZE + 100, paramHeight*CELL_SIZE);
+		board = new SnakeBoard(paramWidth, paramHeight);
 		
-		int type = 0;	//This changes the algorithm to be used
-						//1 is sarsa, 0 is qlearning
 		initPlayer(type);
 		
 		board.setPlayer(p1);
 		ArrayCells = board.getArrayCells();
-		viewCells = new GRect[SnakeBoard.BOARD_WIDTH][SnakeBoard.BOARD_HEIGHT];
+		viewCells = new GRect[board.BOARD_WIDTH][board.BOARD_HEIGHT];
 		int rowOffset = 0;
 		int columnOffset = 0;
 		for(int i = 0; i < SnakeBoard.BOARD_WIDTH;i++) {
@@ -81,8 +77,8 @@ public class View extends GraphicsProgram{
 	}
 	
 	private void initPlayer(int type) {
-		if (type == 0) p1 = new QPlayer(board);
-		else if (type == 1) p1 = new SARSAPlayer(board);
+		if (type == 1) p1 = new QPlayer(board);
+		else if (type == 0) p1 = new SARSAPlayer(board);
 		
 	}
 	
