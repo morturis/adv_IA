@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import snake.view.View;
 
 public class Launcher extends JFrame{
+	
 	JPanel radioButtons = new JPanel(new GridLayout(2, 1));
 	JPanel gameSelect = new JPanel(new FlowLayout());
 	ButtonGroup gameSelectGroup = new ButtonGroup();
