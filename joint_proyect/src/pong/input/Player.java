@@ -28,6 +28,7 @@ public abstract class Player{
 	
 	protected abstract Action chooseAction();
 	protected void takeAction(Action a) {
+		if(a == null) return;
 		board.movePlayer(id, a.action);
 	}
 	protected abstract void update();

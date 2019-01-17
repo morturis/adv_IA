@@ -79,6 +79,7 @@ public class SARSAPlayer extends Player{
 		
 		
 		double newMapTotal = q.getSum();
+		if(Math.abs(previousMapTotal-newMapTotal) > 1) System.out.println(Math.abs(previousMapTotal-newMapTotal));
 		if(Math.abs(previousMapTotal-newMapTotal) < 1) {
 			lowIncrementsInARow++;
 			if(lowIncrementsInARow == 100) whenItWasTerminal = counter;

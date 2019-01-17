@@ -15,7 +15,7 @@ public class Board {
 	public final static int BOTTOM_PLAYER_YOFFSET = BOARD_HEIGHT-View.PLAYER_HEIGHT;
 	public final static int REWARD_GOAL = 10;
 	public final static int REWARD_HIT = 1;
-	public final static int REWARD_MISS = -8;
+	public final static int REWARD_MISS = -20;
 	
 	static int nextId = 1;
 	int id;
@@ -92,17 +92,17 @@ public class Board {
 		if(whichPlayer == 0) {
 			float playerMiddle = p0_x + View.PLAYER_WIDTH/2;
 			factor = ballX - playerMiddle;
-			factor = factor/playerMiddle;
+			factor = factor/(View.PLAYER_WIDTH/2);
 			ballY = View.PLAYER_HEIGHT+1;
 		}else {
 			float playerMiddle = p1_x + View.PLAYER_WIDTH/2;
 			factor = ballX - playerMiddle;
-			factor = factor/playerMiddle;
+			factor = factor/(View.PLAYER_WIDTH/2);
 			ballY = BOARD_HEIGHT -  View.PLAYER_HEIGHT -1;
 		}
-		ballXSpeed = Math.round(-factor*BALL_SPEED);
-		int randomNum = ThreadLocalRandom.current().nextInt(-1, 2);
-		ballXSpeed += randomNum;	//This is here to avoid infinite loops because those are ugly to watch
+		ballXSpeed = Math.round(factor*BALL_SPEED);
+		//int randomNum = ThreadLocalRandom.current().nextInt(-1, 2);
+		//ballXSpeed += randomNum;
 	}
 	
 	/*

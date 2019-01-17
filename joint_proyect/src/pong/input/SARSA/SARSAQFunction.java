@@ -24,15 +24,17 @@ public class SARSAQFunction {
 	}
 
 	public void update(Tuple currentTuple, Tuple tuplePrime, double reward, double learningRate, double discountFactor) {
+		
 		//e(s, a) = e(s, a) +1
 		eligibilityTracesMap.put(currentTuple, eligibilityTracesMap.get(currentTuple)+1);
+		
 		double delta = reward + discountFactor * map.get(tuplePrime) - map.get(currentTuple);
 		//update all values of Q and eMap
 		
-		for(Tuple e: map.keySet()) {
+		for(Tuple t: map.keySet()) {
 			//eligibilityTracesMap.putIfAbsent(e.getKey(), 0.0);
-			map.put(e, map.get(e) + learningRate * delta * eligibilityTracesMap.get(e));
-			eligibilityTracesMap.put(e, discountFactor * lambda * eligibilityTracesMap.get(e));
+			map.put(t, map.get(t) + learningRate * delta * eligibilityTracesMap.get(t));
+			eligibilityTracesMap.put(t, discountFactor * lambda * eligibilityTracesMap.get(t));
 		}
 				
 	}

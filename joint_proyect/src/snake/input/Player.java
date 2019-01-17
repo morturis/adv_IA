@@ -9,7 +9,7 @@ public abstract class Player{
 	protected  static final double DISCOUNT_FACTOR = 0.9;	//gamma
 	
 	private volatile static int nextId;
-	protected  double EPSILON = 1.0;
+	protected  double EPSILON = 0.9;
 	protected  final int id;
 	protected  final SnakeBoard board;
 	protected double reward;
@@ -68,8 +68,8 @@ public abstract class Player{
 	
 	public void run() {
 		counter++;
-		if(counter%900 == 0 && EPSILON >0.0) EPSILON = EPSILON - 0.1;
-		if(counter % 1000 == 0)	System.out.println(counter);
+		if(counter%100 == 0 && EPSILON >0.1) EPSILON = EPSILON - 0.1;
+		System.out.println(counter);
 		//This chooses the action, takes the action and receives the reward via the reward field
 		State state = new State(board);
 		Action action = chooseAction();

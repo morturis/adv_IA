@@ -13,9 +13,9 @@ public class SnakeBoard {
 	public final static int MOVE_RIGHT = 2;
 	public final static int MOVE_UP = -1;
 	public final static int MOVE_DOWN = 1;
-	public final static int REWARD_MOVE = -10;
-	public final static int REWARD_FOOD = 500;
-	public final static int REWARD_COLLIDE = -100;
+	public final static int REWARD_MOVE = -1;
+	public final static int REWARD_FOOD = 10;
+	public final static int REWARD_COLLIDE = -5;
 	private static int nextId = 1;
 	
 	private Cell[][] ArrayCells;

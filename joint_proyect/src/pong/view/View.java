@@ -18,7 +18,7 @@ import pong.input.SARSA.SARSAPlayer;
 @SuppressWarnings("serial")
 public class View extends GraphicsProgram{
 	public final static int PLAYER_HEIGHT = 8;
-	public final static int PLAYER_WIDTH = 40;
+	public final static int PLAYER_WIDTH = 50;
 	public static final int BALL_SIZE = 6;
 	Button buttonEpsilon;
 	Button changeSpeed;
@@ -127,8 +127,8 @@ public class View extends GraphicsProgram{
 	void displayBoard() {
 		int[] playersPos = board.getPlayersPos();
 		int[] ballPos = board.getBallPos();
-		p0rect.setLocation(playersPos[0], Board.BOTTOM_PLAYER_YOFFSET);
-		p1rect.setLocation(playersPos[1], Board.TOP_PLAYER_YOFFSET);
+		p0rect.setLocation(playersPos[1], Board.BOTTOM_PLAYER_YOFFSET);
+		p1rect.setLocation(playersPos[0], Board.TOP_PLAYER_YOFFSET);
 		ball.setLocation(ballPos[0], ballPos[1]);
 		scorep0.setLabel(board.getScore(0)+"");
 		scorep1.setLabel(board.getScore(1)+"");

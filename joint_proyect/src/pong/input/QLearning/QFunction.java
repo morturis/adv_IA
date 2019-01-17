@@ -19,7 +19,7 @@ public class QFunction {
 	}
 	
 	public void update(Tuple currentTuple, Tuple tuplePrime, double reward, double learningRate, double discountFactor) {
-		
+		if(reward == 0) return;
 		double newValue = (1-learningRate) * function(currentTuple) + learningRate * (reward + discountFactor * function(tuplePrime));
 		map.put(currentTuple, newValue);
 		

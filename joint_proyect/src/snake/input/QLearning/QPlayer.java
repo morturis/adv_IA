@@ -72,6 +72,8 @@ public class QPlayer extends Player {
 		reward = 0;	
 		
 		double newMapTotal = q.getSum();
+		//System.out.println(Math.abs(previousMapTotal-newMapTotal));
+		if(Math.abs(previousMapTotal-newMapTotal) > 1) System.out.println(Math.abs(previousMapTotal-newMapTotal));
 		if(Math.abs(previousMapTotal-newMapTotal) < 1) {
 			lowIncrementsInARow++;
 			if(lowIncrementsInARow == 100) whenItWasTerminal = counter;
